@@ -1,0 +1,1698 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>대학정보공시 자체점검 시스템 — 유한대학교 전략기획처</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1:wght@700;800&family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@500;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233F; --ink-soft:#3B4A6B; --paper:#F7F5EF; --paper-card:#FFFFFF;
+    --line:#DCD6C8; --gold:#B8892F; --gold-bg:#F3E7C9; --ok:#2F7D5A; --ok-bg:#E7F2EB;
+    --fix:#B4501E; --fix-bg:#FBEBE0;
+    --shadow: 0 1px 2px rgba(22,35,63,.06), 0 8px 24px rgba(22,35,63,.06);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper);
+    background-image: radial-gradient(circle at 1px 1px, rgba(22,35,63,.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink); font-family:'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+    line-height:1.55; padding: 28px 16px 80px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+
+  header.doc{
+    background:var(--paper-card); border:1px solid var(--line); border-radius:4px;
+    box-shadow:var(--shadow); padding:28px 32px 22px; margin-bottom:16px; position:relative;
+  }
+  .eyebrow{font-size:12.5px; letter-spacing:.14em; color:var(--gold); font-weight:600; text-transform:uppercase; margin-bottom:8px;}
+  h1{font-family:'Noto Serif KR',serif; font-weight:700; font-size:22px; margin:0 0 6px; line-height:1.4; letter-spacing:-.01em;
+     border-bottom: 3px double var(--ink); padding-bottom:14px;}
+  .sub{color:var(--ink-soft); font-size:13px; margin-top:8px;}
+
+  .toolbar{display:flex; justify-content:space-between; gap:8px; margin-bottom:16px; align-items:center;}
+  .toolbar .right{display:flex; gap:8px;}
+  .toolbar button{
+    font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; border-radius:3px;
+    padding:8px 14px; border:1px solid var(--ink); background:#fff; color:var(--ink);
+  }
+  .toolbar button.save{background:var(--ink); color:#fff;}
+  .toolbar button.home-btn{border-color:var(--ink-soft); color:var(--ink-soft);}
+  #save-status{font-size:11.5px; color:var(--ink-soft); align-self:center;}
+
+  .stepper{display:flex; gap:0; margin-bottom:18px; background:var(--paper-card); border:1px solid var(--line); border-radius:4px; overflow:hidden;}
+  .stepper .st{flex:1; text-align:center; padding:11px 6px; font-size:12px; font-weight:600; color:var(--ink-soft); border-right:1px solid var(--line); position:relative;}
+  .stepper .st:last-child{border-right:none;}
+  .stepper .st.active{background:var(--ink); color:#fff;}
+  .stepper .st.done{color:var(--ok);}
+
+  .card{background:var(--paper-card); border:1px solid var(--line); border-radius:4px; box-shadow:var(--shadow); padding:24px 28px; margin-bottom:16px;}
+  .card h2{font-size:15px; margin:0 0 4px; color:var(--ink);}
+  .card .h2-sub{font-size:12.5px; color:var(--ink-soft); margin-bottom:16px;}
+
+  input[type=text], input[type=search], input[type=password], textarea{
+    width:100%; font-family:inherit; font-size:14px; color:var(--ink);
+    padding:9px 12px; border:1px solid var(--line); border-radius:3px; background:#FCFBF8; outline:none;
+    transition:border-color .15s, background .15s;
+  }
+  input:focus, textarea:focus{border-color:var(--ink); background:#fff;}
+  textarea{resize:vertical; min-height:80px;}
+  label.field-label{display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:6px; font-weight:600;}
+
+  /* 홈 */
+  .home-hero{text-align:center; padding:38px 20px 26px;}
+  .home-hero .icon{width:64px;height:64px;border-radius:16px;background:var(--ink);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;color:#fff;}
+  .home-hero .eyebrow{justify-content:center; display:block; text-align:center; font-size:14.5px;}
+  .home-hero h1{border-bottom:none; text-align:center; padding-bottom:0; font-size:38px; font-family:'Do Hyeon',sans-serif; font-weight:400; letter-spacing:.01em;}
+  .home-hero .en{font-size:12px; color:var(--ink-soft); letter-spacing:.06em; margin-top:2px;}
+  .home-hero .term-pill{display:inline-block; margin-top:16px; font-size:12px; font-weight:600; background:var(--gold-bg); color:var(--gold); padding:6px 16px; border-radius:99px;}
+  .home-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:8px;}
+  @media (max-width:720px){ .home-cards{grid-template-columns:1fr;} }
+  .home-card{background:var(--paper-card); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow); padding:28px 20px; text-align:center;}
+  .home-card .hc-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:22px;}
+  .home-card.dept .hc-icon{background:var(--ok-bg); color:var(--ok);}
+  .home-card.org .hc-icon{background:var(--gold-bg); color:var(--gold);}
+  .home-card.admin .hc-icon{background:#E7EAF2; color:var(--ink);}
+  .home-card h3{font-size:16px; margin:0 0 6px;}
+  .home-card p{font-size:12.5px; color:var(--ink-soft); margin:0 0 18px; min-height:34px;}
+  .home-card button{width:100%; font-family:inherit; font-size:13px; font-weight:700; padding:10px; border-radius:3px; cursor:pointer; border:1px solid var(--ink); background:#fff; color:var(--ink);}
+  .home-card.dept button{background:var(--ok); border-color:var(--ok); color:#fff;}
+  .home-card.org button{background:var(--gold); border-color:var(--gold); color:#fff;}
+  .home-card.admin button{background:var(--ink); color:#fff;}
+
+  /* 학과 선택 메뉴 */
+  .dept-filter{margin-bottom:16px;}
+  .dept-menu{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:20px;}
+  .dept-group h3{font-size:13px; margin:0 0 8px; padding-bottom:6px; border-bottom:2px solid var(--ink); color:var(--ink);}
+  .dept-group .dept-btn{
+    display:flex; align-items:center; gap:6px; width:100%; text-align:left; background:none; border:none;
+    font-family:inherit; font-size:13px; color:var(--ink-soft); padding:6px 4px; cursor:pointer; border-radius:3px;
+  }
+  .dept-group .dept-btn:hover{background:var(--paper); color:var(--ink);}
+  .dept-group .dept-btn.selected{background:var(--ink); color:#fff; font-weight:600;}
+  .dept-btn.dim{display:none;}
+  .selected-line{margin-top:16px; padding:12px 14px; border:1px solid var(--ok); background:var(--ok-bg); border-radius:3px; font-size:13.5px; color:var(--ok); font-weight:600; display:none;}
+  .selected-line.show{display:block;}
+
+  /* 점검표 */
+  table.chk{width:100%; border-collapse:collapse; margin-top:4px; box-shadow:0 0 0 1px var(--line);}
+  table.chk > thead > tr > th{font-size:13.5px; color:#fff; background:var(--ink); padding:12px 10px; text-align:left; font-weight:700;}
+  table.chk > thead > tr > th:nth-child(2){text-align:center; border-right:2px solid #fff;}
+  table.chk > thead > tr > th:last-child{text-align:center;}
+  table.chk > tbody > tr > td{padding:16px 12px; font-size:13.5px; vertical-align:top; border-bottom:2px solid var(--ink); word-break:keep-all;}
+  table.chk > tbody > tr > td:nth-child(3){vertical-align:middle;}
+  table.chk tr:last-child td{border-bottom:none;}
+  table.chk > tbody > tr > td:first-child{
+    background:var(--ink); color:#fff; text-align:center; vertical-align:middle;
+    font-family:'Noto Serif KR',serif; font-size:20px; font-weight:700; width:46px;
+    border-bottom:3px solid #fff;
+  }
+  .item-desc{word-break:keep-all; border-right:2px solid var(--ink);}
+  .item-desc b{
+    display:inline-block; margin-bottom:8px; font-size:14.5px; font-weight:700;
+    background:var(--gold-bg); color:var(--ink); padding:3px 9px; border-radius:3px;
+  }
+
+  /* 커스텀 모달 (알림) */
+  .modal-overlay{display:none; position:fixed; inset:0; background:rgba(22,35,63,.55); z-index:999; align-items:center; justify-content:center; padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal-box{background:#fff; border-radius:6px; padding:26px 24px; max-width:400px; width:100%; box-shadow:0 12px 40px rgba(0,0,0,.25);}
+  .modal-box p{white-space:pre-line; font-size:13.5px; color:var(--ink); margin:0 0 18px; line-height:1.6;}
+  .modal-box .modal-ok{width:100%; font-family:inherit; font-size:14px; font-weight:700; color:#fff; background:var(--ink); border:none; border-radius:3px; padding:11px; cursor:pointer;}
+  .modal-box .btn-row{display:flex; gap:10px;}
+  .modal-box .btn-row button{flex:1; font-family:inherit; font-size:13.5px; font-weight:700; border-radius:3px; padding:11px; cursor:pointer;}
+  .modal-box .btn-cancel{background:#fff; color:var(--ink); border:1px solid var(--line);}
+  .modal-box .btn-danger{background:var(--fix); color:#fff; border:none;}
+
+  /* 인쇄 미리보기 문서 */
+  .doc-title-bar{background:var(--ink); color:#fff; font-weight:700; font-size:16px; padding:16px 20px; border-radius:4px 4px 0 0;}
+  .doc-info-table{width:100%; border-collapse:collapse; margin-bottom:24px;}
+  .doc-info-table td{border:1px solid var(--line); padding:11px 16px; font-size:13px;}
+  .doc-info-table td.lbl{background:#EEF1F6; font-weight:700; color:var(--ink); width:130px;}
+  .doc-section-title{font-size:14px; font-weight:700; color:var(--ink); margin:22px 0 8px; padding-left:8px; border-left:4px solid var(--gold);}
+  .doc-table{width:100%; border-collapse:collapse; margin-bottom:8px;}
+  .doc-table th{background:var(--ink); color:#fff; padding:10px; font-size:12.5px; text-align:left;}
+  .doc-table td{border:1px solid var(--line); padding:10px; font-size:12.5px; vertical-align:top; word-break:keep-all;}
+  .doc-table tr:nth-child(even) td{background:#FAF9F5;}
+  .doc-badge{font-weight:700;}
+  .doc-badge.ok{color:var(--ok);}
+  .doc-badge.fix{color:var(--fix);}
+  .item-desc .memo{color:var(--ink-soft); font-size:12.5px; margin-top:6px; word-break:keep-all; padding-left:1.3em; text-indent:-1.3em;}
+  .memo-extra{margin-top:10px; font-size:12.5px; color:var(--ink-soft); background:#EFEDE4; border-radius:3px; padding:8px 10px; word-break:keep-all;}
+  .memo-extra .ml-head{font-weight:700; color:var(--ink);}
+  .memo-extra .ml-sub{padding-left:1.3em; margin-top:2px;}
+  .toggle{display:flex; flex-direction:column; gap:6px;}
+  .toggle button{
+    font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid var(--line);
+    background:#fff; color:var(--ink-soft); padding:8px 10px; border-radius:3px; transition:all .15s; white-space:nowrap;
+  }
+  .toggle button.active.ok{background:var(--ok-bg); border-color:var(--ok); color:var(--ok);}
+  .toggle button.active.fix{background:var(--fix-bg); border-color:var(--fix); color:var(--fix);}
+  .toggle button.active.none{background:#EFEDE4; border-color:var(--ink-soft); color:var(--ink-soft);}
+
+  /* 공시 항목 서브 테이블 (부서용) */
+  .disc-table{width:100%; border-collapse:collapse; margin-top:12px; font-family:'Pretendard',sans-serif;}
+  .disc-table th{background:#EFEDE4; color:var(--ink); font-size:11.5px; padding:7px 8px; text-align:center; font-weight:700;}
+  .disc-table td{border-top:1px solid var(--line); padding:8px; font-size:12.5px; font-weight:400; vertical-align:middle; word-break:keep-all; background:#fff;}
+  .disc-table .disc-assignee{
+    width:100%; font-family:inherit; font-size:12px; padding:6px 8px; border:1px solid var(--line);
+    border-radius:3px; background:#FCFBF8;
+  }
+  .disc-table .disc-toggle{display:flex; gap:5px; flex-wrap:wrap; justify-content:center;}
+  .disc-table .disc-toggle button{
+    font-family:inherit; font-size:11px; font-weight:600; cursor:pointer; border:1px solid var(--line);
+    background:#fff; color:var(--ink-soft); padding:5px 8px; border-radius:3px; white-space:nowrap;
+  }
+  .disc-table .disc-toggle button.active.ok{background:var(--ok-bg); border-color:var(--ok); color:var(--ok);}
+  .disc-table .disc-toggle button.active.fix{background:var(--fix-bg); border-color:var(--fix); color:var(--fix);}
+
+  /* 정정사항 상세 */
+  .fix-card{border:1px solid var(--fix); background:#fff; border-radius:4px; padding:16px 18px; margin-bottom:16px; position:relative;}
+  .fix-card .corr-head{display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12.5px; font-weight:700; color:var(--fix);}
+  .fix-card .corr-head input[type=checkbox]{width:16px; height:16px; accent-color:var(--fix); cursor:pointer;}
+  .fix-path{margin-bottom:14px;}
+  .ba-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:640px){ .ba-grid{grid-template-columns:1fr;} }
+  .ba-box{border:1px solid var(--fix); border-radius:3px; overflow:hidden;}
+  .ba-box .ba-head{background:var(--fix); color:#fff; font-size:12px; font-weight:700; padding:7px 10px; text-align:center;}
+  .ba-box textarea{border:none; border-radius:0; background:var(--fix-bg); min-height:96px;}
+  .ba-box textarea:focus{background:#fff;}
+  .example{font-size:11.5px; color:var(--ink-soft); margin-top:8px; line-height:1.7;}
+  .example .ex-row{display:flex;}
+  .example .ex-tag{flex:0 0 40px; display:inline-block;}
+  .corr-actions{display:flex; justify-content:center; gap:10px; margin-top:6px;}
+  .corr-actions button{font-family:inherit; font-size:13px; font-weight:700; border-radius:3px; padding:9px 20px; cursor:pointer;}
+  .corr-actions .add-btn{background:var(--ink); color:#fff; border:none;}
+  .corr-actions .del-btn{background:#fff; color:var(--fix); border:1px solid var(--fix);}
+
+  /* 최종 확인 */
+  .stat-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;}
+  .stat-cards.admin4{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:640px){ .stat-cards.admin4{grid-template-columns:repeat(2,1fr);} }
+  .stat-card{border:1px solid var(--line); border-radius:4px; padding:18px 10px; text-align:center; background:var(--paper-card);}
+  .stat-card .num{font-size:26px; font-weight:700; font-family:'Noto Serif KR',serif;}
+  .stat-card .lbl{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+  .stat-card.ok{background:var(--ok-bg); border-color:var(--ok);}
+  .stat-card.ok .num{color:var(--ok);}
+  .stat-card.fix{background:var(--fix-bg); border-color:var(--fix);}
+  .stat-card.fix .num{color:var(--fix);}
+  .stat-card.gold{background:var(--gold-bg); border-color:var(--gold);}
+  .stat-card.gold .num{color:var(--gold);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;}
+  @media (max-width:640px){ .grid2{grid-template-columns:1fr;} .grid3{grid-template-columns:1fr;} .stat-cards{grid-template-columns:1fr;} }
+
+  .nav-row{display:flex; justify-content:space-between; align-items:center; margin-top:18px; gap:10px;}
+  button.primary{font-family:inherit; font-size:14px; font-weight:700; color:#fff; background:var(--ink); border:none; border-radius:3px; padding:12px 26px; cursor:pointer; transition:background .15s;}
+  button.primary:hover{background:#0E1830;}
+  button.primary:disabled{background:#B7BCC9; cursor:not-allowed;}
+  button.ghost{font-family:inherit; font-size:13.5px; font-weight:600; color:var(--ink); background:#fff; border:1px solid var(--ink); border-radius:3px; padding:11px 20px; cursor:pointer;}
+  button.submit-final{background:var(--ok);}
+  button.submit-final:hover{background:#245F45;}
+
+  .banner{font-size:12.5px; padding:10px 14px; border-radius:3px; margin-bottom:16px; display:none; align-items:center; gap:8px;}
+  .banner.show{display:flex;}
+  .banner.warn{background:#FBEBE0; color:var(--fix); border:1px solid var(--fix);}
+  .banner.ok{background:var(--ok-bg); color:var(--ok); border:1px solid var(--ok);}
+
+  footer.note{font-size:12px; color:var(--ink-soft); text-align:center; margin-top:24px;}
+
+  /* 관리자 */
+  .admin-row{display:flex; justify-content:space-between; align-items:center; padding:11px 4px; border-bottom:1px solid var(--line); gap:10px; flex-wrap:wrap;}
+  .admin-row:last-child{border-bottom:none;}
+  .admin-row .dname{font-size:13.5px; font-weight:600;}
+  .admin-row .dgroup{font-size:11.5px; color:var(--ink-soft); margin-left:6px; font-weight:400;}
+  .admin-badge{font-size:11px; font-weight:700; padding:4px 11px; border-radius:99px; white-space:nowrap;}
+  .admin-badge.done{background:var(--ok-bg); color:var(--ok);}
+  .admin-badge.draft{background:var(--gold-bg); color:var(--gold);}
+  .admin-badge.none{background:#EFEDE4; color:var(--ink-soft);}
+  .admin-detail{display:none; width:100%; margin-top:10px; background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:12px 14px; font-size:12.5px;}
+  .admin-detail.open{display:block;}
+  .admin-detail table{width:100%; border-collapse:collapse; margin-top:8px;}
+  .admin-detail th, .admin-detail td{border:1px solid var(--line); padding:6px 8px; font-size:12px; text-align:left;}
+  .admin-detail th{background:#EFEDE4;}
+  .detail-toggle{font-size:11.5px; font-weight:600; color:var(--ink); background:none; border:1px solid var(--ink); border-radius:3px; padding:5px 10px; cursor:pointer;}
+  .admin-del-btn{font-size:11.5px; font-weight:600; color:var(--fix); background:none; border:1px solid var(--fix); border-radius:3px; padding:5px 10px; cursor:pointer;}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════ 홈 ══════════ -->
+<div id="home-view" class="wrap screen-view">
+  <div style="text-align:right; margin-bottom:8px;">
+    <button type="button" id="api-settings-btn" class="ghost" style="font-size:12px; padding:7px 12px;">⚙ API 설정</button>
+  </div>
+  <div class="card home-hero">
+    <div class="icon">📋</div>
+    <div class="eyebrow">유한대학교 전략기획처</div>
+    <h1>대학정보공시 자체점검 시스템</h1>
+    <div class="en">Yuhan University Self-Check System</div>
+    <span class="term-pill">2026학년도 하반기</span>
+  </div>
+  <div class="home-cards">
+    <div class="home-card dept">
+      <div class="hc-icon">🎓</div>
+      <h3>학과(전공) 자체점검</h3>
+      <p>학과(전공) 담당자가 점검 항목을<br/>검토하고 제출합니다.</p>
+      <button id="go-dept-btn">시작하기</button>
+    </div>
+    <div class="home-card org">
+      <div class="hc-icon">🏢</div>
+      <h3>부서 자체점검</h3>
+      <p>부서 담당 공시 항목을<br/>검토하고 제출합니다.</p>
+      <button id="go-org-btn">시작하기</button>
+    </div>
+    <div class="home-card admin">
+      <div class="hc-icon">🔒</div>
+      <h3>관리자 현황판</h3>
+      <p>전체 제출 현황을 확인하고 관리합니다.</p>
+      <button id="go-admin-btn">전략기획처 전용</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ API 연결 설정 모달 ══════════ -->
+<div id="api-modal-overlay" class="modal-overlay">
+  <div class="modal-box" style="max-width:460px; text-align:left;">
+    <h3 style="margin:0 0 4px; font-size:15px;">⚙ Google Apps Script API 연결 설정</h3>
+    <p style="margin:0 0 14px; font-size:12.5px; color:var(--ink-soft);">Google 스프레드시트와 연동하려면 배포된 웹앱 URL을 입력하세요.</p>
+    <div style="background:var(--ink); color:#fff; border-radius:4px; padding:12px 14px; font-size:11.5px; line-height:1.8; margin-bottom:14px;">
+      <b>배포 방법</b><br/>
+      1. Google 스프레드시트 열기<br/>
+      2. 확장 프로그램 → Apps Script<br/>
+      3. 코드 전체 지우고 apps_script.js 내용 붙여넣기<br/>
+      4. 배포 → 새 배포 → 웹 앱 → 실행: 나 / 액세스: 모든 사용자 → 배포<br/>
+      5. 웹앱 URL 복사 후 아래 입력
+    </div>
+    <label class="field-label">Google Apps Script 웹앱 URL</label>
+    <input type="text" id="api-url-input" placeholder="https://script.google.com/macros/s/..." />
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button type="button" class="primary" id="api-save-btn" style="flex:1;">연결 저장</button>
+      <button type="button" class="ghost" id="api-test-btn" style="flex:1;">연결 테스트</button>
+    </div>
+    <div id="api-test-result" style="font-size:12px; margin-top:10px;"></div>
+    <p style="font-size:11.5px; color:var(--ink-soft); margin:14px 0 0;">※ API URL 없이도 이 브라우저에서만 저장되는 로컬 모드로 사용 가능합니다.</p>
+    <button type="button" class="ghost" id="api-close-btn" style="width:100%; margin-top:14px;">닫기</button>
+  </div>
+</div>
+
+<!-- ══════════ 학과 자체점검 ══════════ -->
+<div id="dept-view" class="wrap screen-view" style="display:none;">
+  <header class="doc">
+    <div class="eyebrow">2026년 하반기 · 대학정보공시 외부모니터링 대비</div>
+    <h1>학과(전공) 자체 점검·정비 확인서</h1>
+    <div class="sub">학과(전공)를 선택하고 점검 항목을 확인한 뒤, 정정이 필요하면 상세 내용을 작성해 제출해 주세요.</div>
+  </header>
+
+  <div class="toolbar">
+    <button type="button" class="home-btn" data-home>← 홈으로</button>
+    <span id="save-status">아직 선택된 학과가 없습니다.</span>
+    <div class="right">
+      <button type="button" class="save" id="draft-btn">💾 임시저장</button>
+      <button type="button" id="print-btn">🖨 인쇄</button>
+    </div>
+  </div>
+
+  <div id="banner-unsupported" class="banner warn">
+    ⚠ 저장소 API가 연결되지 않아 <b>이 브라우저에만</b> 임시 저장됩니다. 다른 사람과 데이터를 공유하려면 홈 화면의 "⚙ API 설정"에서 연결해 주세요.
+  </div>
+  <div id="banner-loaded" class="banner ok"></div>
+
+  <div class="stepper">
+    <div class="st" data-step="0">1. 학과 선택</div>
+    <div class="st" data-step="1">2. 점검표</div>
+    <div class="st" data-step="2">3. 정정사항 작성</div>
+    <div class="st" data-step="3">4. 최종 확인·제출</div>
+  </div>
+
+  <section id="step-0" class="card">
+    <h2>학과(전공) 선택</h2>
+    <div class="h2-sub">아래 목록에서 소속 학과(전공)를 클릭하세요.</div>
+    <div class="dept-filter">
+      <input type="search" id="dept-filter-input" placeholder="학과명으로 빠르게 찾기 (예: 간호)" />
+    </div>
+    <div id="dept-menu" class="dept-menu"></div>
+    <div id="selected-line" class="selected-line"></div>
+    <div class="nav-row">
+      <span></span>
+      <button class="primary" id="to-step1-btn" disabled>다음 →</button>
+    </div>
+  </section>
+
+  <section id="step-1" class="card" style="display:none;">
+    <h2>점검 및 정비</h2>
+    <div class="h2-sub" id="step1-dept-label"></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px; text-align:center;">연번</th><th style="text-align:center;">점검사항 및 정비 방법</th><th style="width:120px; text-align:center;">점검 및 정비 여부</th></tr></thead>
+      <tbody id="item-rows"></tbody>
+    </table>
+    <div class="nav-row">
+      <button class="ghost" data-goto="0">← 이전</button>
+      <button class="primary" id="to-step2-btn" disabled>다음 →</button>
+    </div>
+  </section>
+
+  <section id="step-2" class="card" style="display:none;">
+    <h2>정정사항 작성</h2>
+    <div class="h2-sub">"정정완료"로 표시한 항목에 대해 수정 대상 경로와 수정 전 / 수정 후 내용을 적어주세요.</div>
+    <div id="fix-cards"></div>
+    <div class="nav-row">
+      <button class="ghost" data-goto="1">← 이전</button>
+      <button class="primary" id="to-step3-btn">다음 →</button>
+    </div>
+  </section>
+
+  <section id="step-3" class="card" style="display:none;">
+    <h2>점검 결과 최종 확인 및 제출</h2>
+    <div class="h2-sub">내용을 검토한 후 최종 제출하면 전략기획처로 전달됩니다.</div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">전체 항목</div></div>
+      <div class="stat-card ok"><div class="num" id="stat-ok">0</div><div class="lbl">이상없음</div></div>
+      <div class="stat-card fix"><div class="num" id="stat-fix">0</div><div class="lbl">정정완료</div></div>
+    </div>
+    <div class="grid2">
+      <div><label class="field-label" for="submitter">작성자</label><input type="text" id="submitter" placeholder="이름을 입력하세요" /></div>
+      <div><label class="field-label" for="head">학과장</label><input type="text" id="head" placeholder="이름을 입력하세요" /></div>
+    </div>
+    <div class="nav-row">
+      <button class="ghost" id="back-to-check-btn">← 점검 수정</button>
+      <button class="primary submit-final" id="submit-final-btn">✔ 최종 제출</button>
+    </div>
+  </section>
+
+  <footer class="note">전략기획처 · 대학정보공시 자체 점검 플랫폼</footer>
+</div>
+
+<!-- ══════════ 부서 자체점검 ══════════ -->
+<div id="org-view" class="wrap screen-view" style="display:none;">
+  <header class="doc">
+    <div class="eyebrow">2026년 하반기 · 대학정보공시 외부모니터링 대비</div>
+    <h1>부서 자체 점검·정비 확인서</h1>
+    <div class="sub">부서를 선택하고 점검 항목과 담당 공시항목을 확인한 뒤, 정정이 필요하면 상세 내용을 작성해 제출해 주세요.</div>
+  </header>
+
+  <div class="toolbar">
+    <button type="button" class="home-btn" data-home>← 홈으로</button>
+    <span id="org-save-status">아직 선택된 부서가 없습니다.</span>
+    <div class="right">
+      <button type="button" class="save" id="org-draft-btn">💾 임시저장</button>
+      <button type="button" id="org-print-btn">🖨 인쇄</button>
+    </div>
+  </div>
+
+  <div id="org-banner-unsupported" class="banner warn">
+    ⚠ 저장소 API가 연결되지 않아 <b>이 브라우저에만</b> 임시 저장됩니다. 다른 사람과 데이터를 공유하려면 홈 화면의 "⚙ API 설정"에서 연결해 주세요.
+  </div>
+  <div id="org-banner-loaded" class="banner ok"></div>
+
+  <div class="stepper">
+    <div class="st" data-org-step="0">1. 부서 선택</div>
+    <div class="st" data-org-step="1">2. 점검표</div>
+    <div class="st" data-org-step="2">3. 정정사항 작성</div>
+    <div class="st" data-org-step="3">4. 최종 확인·제출</div>
+  </div>
+
+  <section id="org-step-0" class="card">
+    <h2>부서 선택</h2>
+    <div class="h2-sub">아래 목록에서 소속 부서를 클릭하세요.</div>
+    <div class="dept-filter">
+      <input type="search" id="org-filter-input" placeholder="부서명으로 빠르게 찾기 (예: 총무)" />
+    </div>
+    <div id="org-menu" class="dept-menu"></div>
+    <div id="org-selected-line" class="selected-line"></div>
+    <div class="nav-row">
+      <span></span>
+      <button class="primary" id="org-to-step1-btn" disabled>다음 →</button>
+    </div>
+  </section>
+
+  <section id="org-step-1" class="card" style="display:none;">
+    <h2>점검 및 정비</h2>
+    <div class="h2-sub" id="org-step1-label"></div>
+    <table class="chk">
+      <thead><tr><th style="width:34px; text-align:center;">연번</th><th style="text-align:center;">점검사항 및 정비 방법</th><th style="width:120px; text-align:center;">점검 및 정비 여부</th></tr></thead>
+      <tbody id="org-item-rows"></tbody>
+    </table>
+    <div class="nav-row">
+      <button class="ghost" data-org-goto="0">← 이전</button>
+      <button class="primary" id="org-to-step2-btn">다음 →</button>
+    </div>
+  </section>
+
+  <section id="org-step-2" class="card" style="display:none;">
+    <h2>정정사항 작성</h2>
+    <div class="h2-sub">"정정완료"·"정정예정"으로 표시한 항목에 대해 수정 대상 경로와 수정 전 / 수정 후 내용을 적어주세요.</div>
+    <div id="org-fix-cards"></div>
+    <div class="nav-row">
+      <button class="ghost" data-org-goto="1">← 이전</button>
+      <button class="primary" id="org-to-step3-btn">다음 →</button>
+    </div>
+  </section>
+
+  <section id="org-step-3" class="card" style="display:none;">
+    <h2>점검 결과 최종 확인 및 제출</h2>
+    <div class="h2-sub">내용을 검토한 후 최종 제출하면 전략기획처로 전달됩니다.</div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="num" id="org-stat-total">0</div><div class="lbl">전체 항목</div></div>
+      <div class="stat-card ok"><div class="num" id="org-stat-ok">0</div><div class="lbl">이상없음</div></div>
+      <div class="stat-card fix"><div class="num" id="org-stat-fix">0</div><div class="lbl">정정완료·정정예정</div></div>
+    </div>
+    <div class="grid3">
+      <div><label class="field-label" for="org-submitter">작성자(대표 1인)</label><input type="text" id="org-submitter" placeholder="이름을 입력하세요" /></div>
+      <div><label class="field-label" for="org-manager">팀장/센터장</label><input type="text" id="org-manager" placeholder="이름을 입력하세요" /></div>
+      <div><label class="field-label" for="org-head">부서장(처장/단장/원장/실장)</label><input type="text" id="org-head" placeholder="이름을 입력하세요" /></div>
+    </div>
+    <div style="font-size:11.5px; color:var(--ink-soft); margin-top:12px;">※ 팀장/센터장: 중간관리자가 없는 경우(예. 사업단) 하이픈 기호( - ) 입력</div>
+    <div class="nav-row">
+      <button class="ghost" id="org-back-to-check-btn">← 점검 수정</button>
+      <button class="primary submit-final" id="org-submit-final-btn">✔ 최종 제출</button>
+    </div>
+  </section>
+
+  <footer class="note">전략기획처 · 대학정보공시 자체 점검 플랫폼</footer>
+</div>
+
+<!-- ══════════ 관리자 ══════════ -->
+<div id="admin-view" class="wrap screen-view" style="display:none;">
+  <header class="doc">
+    <div class="eyebrow">관리자 전용</div>
+    <h1>학과(전공) 자체점검 현황판</h1>
+    <div class="sub">전략기획처 관리자만 접근합니다. (간이 접근코드 — 실제 보안 인증은 아닙니다)</div>
+  </header>
+  <div class="toolbar"><button type="button" class="home-btn" data-home>← 홈으로</button><span></span><div class="right"></div></div>
+
+  <div id="admin-gate" class="card">
+    <h2>🔒 관리자 접근코드 입력</h2>
+    <div class="h2-sub">전략기획처에서 정한 접근코드를 입력하세요.</div>
+    <div class="grid2">
+      <input type="password" id="admin-code-input" placeholder="접근코드" />
+      <button class="primary" id="admin-unlock-btn" style="width:100%;">확인</button>
+    </div>
+  </div>
+
+  <div id="admin-dashboard" style="display:none;">
+    <div class="stat-cards admin4" id="admin-stats"></div>
+    <div class="card">
+      <div class="nav-row" style="margin-top:0;">
+        <h2 style="margin:0;">학과(전공) 제출 현황 (총 38개)</h2>
+        <button class="ghost" id="admin-refresh-btn">↻ 새로고침</button>
+      </div>
+      <div id="admin-list"></div>
+    </div>
+    <div class="card">
+      <div class="stat-cards admin4" id="admin-org-stats" style="margin-bottom:16px;"></div>
+      <div class="nav-row" style="margin-top:0;">
+        <h2 style="margin:0;">부서 제출 현황 (총 42개)</h2>
+        <button class="ghost" id="admin-org-refresh-btn">↻ 새로고침</button>
+      </div>
+      <div id="admin-org-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 인쇄 미리보기 ══════════ -->
+<div id="print-view" class="wrap screen-view" style="display:none;">
+  <div class="toolbar no-print">
+    <button type="button" class="home-btn" id="print-back-btn">← 돌아가기</button>
+    <span></span>
+    <div class="right"><button type="button" class="save" id="print-now-btn">🖨 인쇄 (Ctrl+P)</button></div>
+  </div>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div id="print-content" style="padding:26px 30px;"></div>
+  </div>
+  <div class="h2-sub no-print" style="text-align:center; margin-top:10px;">이 화면 그대로 인쇄됩니다. 인쇄 버튼이 동작하지 않으면 브라우저 메뉴에서 인쇄(Ctrl+P)를 눌러주세요.</div>
+</div>
+<style>
+  @media print{
+    *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body{ background:#fff !important; padding:0 !important; }
+    #home-view, #dept-view, #org-view, #admin-view{ display:none !important; }
+    #print-view .no-print{ display:none !important; }
+    #print-view .card{ box-shadow:none !important; border:none !important; }
+  }
+</style>
+
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal-box">
+    <p id="modal-msg"></p>
+    <button type="button" class="modal-ok" id="modal-ok-btn">확인</button>
+  </div>
+</div>
+
+<div id="confirm-overlay" class="modal-overlay">
+  <div class="modal-box">
+    <p id="confirm-msg"></p>
+    <div class="btn-row">
+      <button type="button" class="btn-cancel" id="confirm-cancel-btn">취소</button>
+      <button type="button" class="btn-danger" id="confirm-ok-btn">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// TODO: 실제 운영 시 관리자 접근코드를 변경하세요.
+const ADMIN_CODE = "yuhan0375";
+
+const DEPT_GROUPS = [
+  { group: "자유전공학과", items: ["자유전공학과"] },
+  { group: "공학부", items: ["기계공학전공","소방설비안전전공","전기공학전공","전자공학전공","컴퓨터소프트웨어전공","게임콘텐츠전공","인공지능전공"] },
+  { group: "디자인문화학부", items: ["산업디자인전공","시각디자인전공","패션디자인전공","실내건축전공","광고미디어전공","방송영상전공","애니메이션웹툰전공","방송문예창작전공","방송연예전공"] },
+  { group: "건강보건학부", items: ["식품영양학과","보건의료행정학과","작업치료과","반려동물보건학과","응급구조과","치위생학과","간호학과"] },
+  { group: "건강생활학부", items: ["유한바이오제약전공","유한생명화공전공","피부메이크업전공","뷰티화장품전공","사회복지전공","스포츠재활전공","반려동물산업전공","호텔조리전공","카페베이커리전공"] },
+  { group: "비즈니스학부", items: ["호텔관광전공","일본비즈니스전공","경영정보전공","세무회계전공","항공서비스학과"] }
+];
+const ALL_DEPTS = DEPT_GROUPS.flatMap(g => g.items);
+function groupOf(name){ return (DEPT_GROUPS.find(g => g.items.includes(name)) || {}).group || ""; }
+
+const ITEMS = [
+  { id:"ad-check", title:"온·오프라인 홍보 매체 허위광고 점검",
+    desc:"대학 홈페이지 및 학과 개별 홈페이지, 블로그, 페이스북, 인스타그램, X(前 트위터) 등 온라인 매체 / 대학 및 학과 홍보 브로슈어 등 오프라인 매체의 허위광고(과장·과소광고) 내용 확인",
+    memo:"※ 학과 개별 홈페이지 [학과소개] 및 [학과장인사말]에 기재된 사항에서 허위광고가 집중적으로 적발되는 사례가 많으므로 주의 요망" },
+  { id:"correction", title:"부정확·추정 기재 내용 정정",
+    desc:"부정확하거나 추정된 값을 기재하여 허위광고한 내용 포함 오류 발견 시 즉시 삭제 및 내용 정정",
+    memo:"※ 내용 정정 방법: 광고에 공시 데이터가 사용되는 경우 공시연도를 명확하게 기재. 근거(출처·연도 등)가 명시되지 않으면 현재 기준으로 간주(현재 기준이더라도 공시연도 기재 권장)" },
+  { id:"figures", title:"수치 객관성 확인",
+    desc:"수치(취업률, 재학생 충원율 등) 등 객관적인 값 기재 시 대학알리미 정보 철저히 확인",
+    memo:"확인 경로: 대학알리미(<a href=\"https://www.academyinfo.go.kr\" target=\"_blank\" rel=\"noopener\" style=\"color:var(--gold); text-decoration:underline;\">academyinfo.go.kr</a>) → '유한대학교' 검색 → 대학개별공시 클릭",
+    extraLines:[
+      "많이 사용하는 지표 빠른 확인방법:",
+      "취업률 : 그룹웨어 → 공지사항 → '취업률' 검색",
+      "만족도 조사 점수 : 그룹웨어 → 자료실 → '만족도' 검색"
+    ] }
+];
+
+/* ───────── 저장소 어댑터: Google Apps Script API 또는 로컬(브라우저) 저장 ───────── */
+const API_URL_KEY = "yuhan-check-api-url";
+const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbySpqX-NIda_1hz69HYoL5rhfScWkxAks1jCURr5i9P6EtZb9MKLsHelrmuD4OeCtuO/exec";
+function getApiUrl(){ return localStorage.getItem(API_URL_KEY) || DEFAULT_API_URL; }
+function setApiUrl(url){ if (url) localStorage.setItem(API_URL_KEY, url); else localStorage.removeItem(API_URL_KEY); }
+
+function localGet_(key){ const v = localStorage.getItem("ls:" + key); return v !== null ? { key, value: v, shared: true } : null; }
+function localSet_(key, value){ localStorage.setItem("ls:" + key, value); return { key, value, shared: true }; }
+function localDelete_(key){ localStorage.removeItem("ls:" + key); return { key, deleted: true, shared: true }; }
+
+async function apiCall_(action, params){
+  const url = getApiUrl();
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, ...params })
+  });
+  if (!res.ok) throw new Error("API 요청 실패");
+  return await res.json();
+}
+
+const appStorage = {
+  async get(key){
+    if (!getApiUrl()) return localGet_(key);
+    const data = await apiCall_("get", { key });
+    if (data.value === null || data.value === undefined) return null;
+    return { key, value: data.value, shared: true };
+  },
+  async set(key, value){
+    if (!getApiUrl()) return localSet_(key, value);
+    await apiCall_("set", { key, value });
+    return { key, value, shared: true };
+  },
+  async delete(key){
+    if (!getApiUrl()) return localDelete_(key);
+    await apiCall_("delete", { key });
+    return { key, deleted: true, shared: true };
+  }
+};
+
+const STORAGE_SUPPORTED = true; // appStorage는 API 연결 여부와 상관없이 항상 동작(미연결 시 이 브라우저에만 저장)
+
+function showModal(msg){
+  document.getElementById("modal-msg").textContent = msg;
+  document.getElementById("modal-overlay").classList.add("show");
+}
+document.getElementById("modal-ok-btn").addEventListener("click", () => {
+  document.getElementById("modal-overlay").classList.remove("show");
+});
+document.getElementById("modal-overlay").addEventListener("click", (e) => {
+  if (e.target.id === "modal-overlay") document.getElementById("modal-overlay").classList.remove("show");
+});
+
+let _confirmCallback = null;
+function showConfirm(msg, onConfirm){
+  document.getElementById("confirm-msg").textContent = msg;
+  _confirmCallback = onConfirm;
+  document.getElementById("confirm-overlay").classList.add("show");
+}
+document.getElementById("confirm-cancel-btn").addEventListener("click", () => {
+  document.getElementById("confirm-overlay").classList.remove("show");
+  _confirmCallback = null;
+});
+document.getElementById("confirm-ok-btn").addEventListener("click", () => {
+  document.getElementById("confirm-overlay").classList.remove("show");
+  if (_confirmCallback) _confirmCallback();
+  _confirmCallback = null;
+});
+let currentStep = 0;
+let currentDept = null;
+let itemState = {};
+let corrections = []; // [{id, path, before, after}]
+let corrSeq = 0;
+let finalized = false;
+let submittedAt = null;
+
+function resetItemState(){ itemState = {}; ITEMS.forEach(it => itemState[it.id] = { status:null }); corrections = []; corrSeq = 0; }
+resetItemState();
+function keyFor(dept){ return "dept-check:" + dept; }
+
+/* ───────── 뷰 전환 ───────── */
+const ALL_VIEWS = ["home-view","dept-view","org-view","admin-view","print-view"];
+let printReturnView = "dept-view";
+function switchView(id){
+  ALL_VIEWS.forEach(v => document.getElementById(v).style.display = (v === id ? "block" : "none"));
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function goHome(){ switchView("home-view"); }
+document.querySelectorAll("[data-home]").forEach(b => b.addEventListener("click", goHome));
+document.getElementById("go-dept-btn").addEventListener("click", () => switchView("dept-view"));
+document.getElementById("go-org-btn").addEventListener("click", () => switchView("org-view"));
+document.getElementById("go-admin-btn").addEventListener("click", () => switchView("admin-view"));
+
+
+/* ───────── 학과 메뉴 ───────── */
+function renderDeptMenu(){
+  const box = document.getElementById("dept-menu");
+  box.innerHTML = "";
+  DEPT_GROUPS.forEach(g => {
+    const col = document.createElement("div");
+    col.className = "dept-group";
+    const h3 = document.createElement("h3");
+    h3.textContent = g.group;
+    col.appendChild(h3);
+    g.items.forEach(name => {
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "dept-btn"; btn.dataset.name = name;
+      btn.textContent = name;
+      btn.addEventListener("click", () => selectDepartment(name));
+      col.appendChild(btn);
+    });
+    box.appendChild(col);
+  });
+}
+document.getElementById("dept-filter-input").addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll(".dept-btn").forEach(btn => {
+    btn.classList.toggle("dim", !(!q || btn.dataset.name.toLowerCase().includes(q)));
+  });
+});
+
+function renderItems(){
+  const tbody = document.getElementById("item-rows");
+  tbody.innerHTML = "";
+  ITEMS.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+    let infoHtml = "";
+    if (item.extraLines){
+      infoHtml = `<div class="memo-extra"><div class="ml-head">※ ${item.extraLines[0]}</div>${item.extraLines.slice(1).map(l => `<div class="ml-sub">${l}</div>`).join("")}</div>`;
+    }
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td class="item-desc"><b>${item.title}</b><br/>${item.desc}<div class="memo">${item.memo}</div>${infoHtml}</td>
+      <td>
+        <div class="toggle" data-item="${item.id}">
+          <button type="button" class="ok-btn" data-status="ok">이상없음</button>
+          <button type="button" class="fix-btn" data-status="fix">정정완료</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll(".toggle").forEach(t => {
+    const itemId = t.dataset.item;
+    t.querySelector(".ok-btn").addEventListener("click", () => setStatus(itemId, "ok"));
+    t.querySelector(".fix-btn").addEventListener("click", () => setStatus(itemId, "fix"));
+  });
+  applyItemButtonStates();
+}
+function applyItemButtonStates(){
+  ITEMS.forEach(item => {
+    const toggle = document.querySelector(`.toggle[data-item="${item.id}"]`);
+    if (!toggle) return;
+    const status = itemState[item.id].status;
+    toggle.querySelector(".ok-btn").classList.toggle("active", status === "ok");
+    toggle.querySelector(".ok-btn").classList.toggle("ok", status === "ok");
+    toggle.querySelector(".fix-btn").classList.toggle("active", status === "fix");
+    toggle.querySelector(".fix-btn").classList.toggle("fix", status === "fix");
+  });
+}
+function setStatus(itemId, status){
+  itemState[itemId].status = status;
+  applyItemButtonStates();
+  document.getElementById("to-step2-btn").disabled = !ITEMS.every(it => itemState[it.id].status !== null);
+}
+
+function addCorrection(){
+  corrSeq++;
+  corrections.push({ id: corrSeq, path:"", before:"", after:"" });
+  renderFixCards();
+}
+function removeSelectedCorrections(){
+  const checked = Array.from(document.querySelectorAll(".corr-select:checked")).map(cb => parseInt(cb.dataset.id));
+  if (checked.length === 0){ showModal("삭제할 정정사항을 먼저 선택해 주세요."); return; }
+  corrections = corrections.filter(c => !checked.includes(c.id));
+  renderFixCards();
+}
+function renderFixCards(){
+  const box = document.getElementById("fix-cards");
+  box.innerHTML = "";
+  const anyFix = ITEMS.some(it => itemState[it.id].status === "fix");
+  if (!anyFix){
+    box.innerHTML = `<div class="h2-sub" style="margin:0;">정정완료로 표시한 항목이 없습니다. 바로 다음 단계로 진행해 주세요.</div>`;
+    return;
+  }
+  if (corrections.length === 0){ corrSeq++; corrections.push({ id: corrSeq, path:"", before:"", after:"" }); }
+
+  corrections.forEach((c, idx) => {
+    const wrap = document.createElement("div");
+    wrap.className = "fix-card";
+    wrap.innerHTML = `
+      ${idx === 0 ? "" : `<div class="corr-head"><input type="checkbox" class="corr-select" data-id="${c.id}" /> 삭제 시 선택</div>`}
+      <div class="fix-path">
+        <label class="field-label">수정 대상 경로</label>
+        <input type="text" id="path-${c.id}" placeholder="예: 대학홈페이지 > 전공소개 > 인사말" value="${c.path}" />
+      </div>
+      <div class="ba-grid">
+        <div class="ba-box"><div class="ba-head">수정 전</div><textarea id="before-${c.id}" placeholder="현재 게시되어 있는 내용을 적어주세요.">${c.before}</textarea></div>
+        <div class="ba-box"><div class="ba-head">수정 후</div><textarea id="after-${c.id}" placeholder="수정완료한 내용을 적어주세요.">${c.after}</textarea></div>
+      </div>
+      <div class="example">
+        <div class="ex-row"><span class="ex-tag">예시:</span><span>(수정 전) "70%의 높은 취업률"</span></div>
+        <div class="ex-row"><span class="ex-tag"></span><span>(수정 후) "취업률 68.8%(2025년 대학정보공시, 기준일자 2024.12.31.)"</span></div>
+        <div><b>→ "높은"이라는 허위·과장광고로 판단될 가능성이 있는 단어를 삭제하고, 정확한 출처와 수치를 기재하는 것으로 수정</b></div>
+      </div>`;
+    box.appendChild(wrap);
+    wrap.querySelector(`#path-${c.id}`).addEventListener("input", (e) => { c.path = e.target.value; });
+    wrap.querySelector(`#before-${c.id}`).addEventListener("input", (e) => { c.before = e.target.value; });
+    wrap.querySelector(`#after-${c.id}`).addEventListener("input", (e) => { c.after = e.target.value; });
+  });
+
+  const actions = document.createElement("div");
+  actions.className = "corr-actions";
+  actions.innerHTML = `<button type="button" class="add-btn" id="add-corr-btn">+ 추가</button><button type="button" class="del-btn" id="del-corr-btn">🗑 삭제</button>`;
+  box.appendChild(actions);
+  document.getElementById("add-corr-btn").addEventListener("click", addCorrection);
+  document.getElementById("del-corr-btn").addEventListener("click", removeSelectedCorrections);
+}
+
+function updateStepper(){
+  document.querySelectorAll(".stepper .st").forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.toggle("active", s === currentStep);
+    el.classList.toggle("done", s < currentStep);
+  });
+}
+function showStep(n){
+  currentStep = n;
+  [0,1,2,3].forEach(i => document.getElementById("step-"+i).style.display = (i===n ? "block" : "none"));
+  updateStepper();
+  if (n === 2) renderFixCards();
+  if (n === 3) updateStats();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("[data-goto]").forEach(btn => btn.addEventListener("click", () => showStep(parseInt(btn.dataset.goto))));
+
+document.getElementById("to-step1-btn").addEventListener("click", () => {
+  document.getElementById("step1-dept-label").textContent = "선택된 학과(전공): " + currentDept;
+  showStep(1);
+});
+document.getElementById("to-step2-btn").addEventListener("click", () => {
+  const anyFix = ITEMS.some(it => itemState[it.id].status === "fix");
+  showStep(anyFix ? 2 : 3);
+});
+document.getElementById("to-step3-btn").addEventListener("click", () => {
+  const anyFix = ITEMS.some(it => itemState[it.id].status === "fix");
+  if (anyFix){
+    const incomplete = corrections.length === 0 || corrections.some(c => !c.path.trim() || !c.before.trim() || !c.after.trim());
+    if (incomplete){
+    showModal("점검표에서 '정정완료'로 표시하신 항목이 있습니다.\n\n수정 내역 확인을 위해 정정사항 박스마다 수정 대상 경로 · 수정 전 · 수정 후 내용을 반드시 작성하여 주세요.\n\n미작성 항목을 모두 채운 뒤 다시 진행해 주세요.");
+      return;
+    }
+  }
+  showStep(3);
+});
+document.getElementById("back-to-check-btn").addEventListener("click", () => {
+  const anyFix = ITEMS.some(it => itemState[it.id].status === "fix");
+  showStep(anyFix ? 2 : 1);
+});
+
+function updateStats(){
+  const okCount = ITEMS.filter(it => itemState[it.id].status === "ok").length;
+  const fixCount = ITEMS.filter(it => itemState[it.id].status === "fix").length;
+  document.getElementById("stat-total").textContent = ITEMS.length;
+  document.getElementById("stat-ok").textContent = okCount;
+  document.getElementById("stat-fix").textContent = fixCount;
+}
+
+async function selectDepartment(name){
+  currentDept = name;
+  document.querySelectorAll(".dept-btn").forEach(b => b.classList.toggle("selected", b.dataset.name === name));
+  const line = document.getElementById("selected-line");
+  line.textContent = "선택됨: " + name;
+  line.classList.add("show");
+  document.getElementById("to-step1-btn").disabled = false;
+  resetItemState();
+  renderItems();
+  document.getElementById("to-step2-btn").disabled = true;
+  document.getElementById("banner-loaded").classList.remove("show");
+  document.getElementById("save-status").textContent = "학과: " + name + " (아직 저장 안 됨)";
+  finalized = false; submittedAt = null;
+
+  if (STORAGE_SUPPORTED){
+    try{
+      const rec = await appStorage.get(keyFor(name), true);
+      if (rec){
+        const data = JSON.parse(rec.value);
+        applyRecord(data);
+        const bl = document.getElementById("banner-loaded");
+        bl.textContent = data.finalized
+          ? `이 학과는 이미 최종 제출되었습니다 (제출일시: ${data.submittedAt}, 작성자: ${data.submitter}). 필요 시 수정 후 다시 제출하면 최신 내용으로 갱신됩니다.`
+          : `임시저장된 내용을 불러왔습니다 (저장일시: ${data.savedAt}).`;
+        bl.classList.add("show");
+        document.getElementById("save-status").textContent = "학과: " + name + (data.finalized ? " · 제출완료" : " · 임시저장됨");
+        document.getElementById("to-step2-btn").disabled = !ITEMS.every(it => itemState[it.id].status !== null);
+      }
+    }catch(e){}
+  }
+}
+function applyRecord(data){
+  document.getElementById("submitter").value = data.submitter || "";
+  document.getElementById("head").value = data.head || "";
+  finalized = !!data.finalized;
+  submittedAt = data.submittedAt || null;
+  (data.items||[]).forEach(saved => {
+    if (itemState[saved.id]) itemState[saved.id] = { status: saved.status };
+  });
+  corrections = (data.corrections || []).map(c => { corrSeq++; return { id: corrSeq, path:c.path||"", before:c.before||"", after:c.after||"" }; });
+  applyItemButtonStates();
+}
+function buildRecord(finalize){
+  return {
+    department: currentDept,
+    submitter: document.getElementById("submitter").value.trim(),
+    head: document.getElementById("head").value.trim(),
+    finalized: finalize ? true : finalized,
+    submittedAt: finalize ? new Date().toLocaleString("ko-KR") : submittedAt,
+    savedAt: new Date().toLocaleString("ko-KR"),
+    items: ITEMS.map(it => ({ id: it.id, status: itemState[it.id].status })),
+    corrections: corrections.map(c => ({ path: c.path, before: c.before, after: c.after }))
+  };
+}
+async function persist(record){
+  if (!STORAGE_SUPPORTED){
+    showModal("이 환경에서는 자동 저장이 지원되지 않습니다. 아래 내용을 별도로 저장해 주세요:\n\n" + JSON.stringify(record, null, 2));
+    return false;
+  }
+  await appStorage.set(keyFor(currentDept), JSON.stringify(record), true);
+  let idx = {};
+  try{
+    const idxRec = await appStorage.get("dept-check-index", true);
+    if (idxRec) idx = JSON.parse(idxRec.value);
+  }catch(e){}
+  idx[currentDept] = { finalized: record.finalized, savedAt: record.savedAt, submittedAt: record.submittedAt };
+  await appStorage.set("dept-check-index", JSON.stringify(idx), true);
+  return true;
+}
+document.getElementById("draft-btn").addEventListener("click", async () => {
+  if (!currentDept){ showModal("먼저 학과(전공)를 선택해 주세요."); return; }
+  const record = buildRecord(false);
+  if (await persist(record)) document.getElementById("save-status").textContent = `학과: ${currentDept} · 임시저장됨 (${record.savedAt})`;
+});
+document.getElementById("submit-final-btn").addEventListener("click", async () => {
+  if (!currentDept){ showModal("먼저 학과(전공)를 선택해 주세요."); return; }
+  if (!document.getElementById("submitter").value.trim()){ showModal("작성자 이름을 입력해 주세요."); return; }
+  if (!document.getElementById("head").value.trim()){ showModal("학과장 이름을 입력해 주세요."); return; }
+  if (!ITEMS.every(it => itemState[it.id].status !== null)){ showModal("모든 항목의 점검 결과를 선택해 주세요."); return; }
+  const record = buildRecord(true);
+  if (await persist(record)){
+    finalized = true; submittedAt = record.submittedAt;
+    document.getElementById("save-status").textContent = `학과: ${currentDept} · 제출완료 (${record.submittedAt})`;
+    showModal("최종 제출되었습니다. 감사합니다.");
+  }
+});
+
+function buildPrintSheet(){
+  const now = new Date().toLocaleString("ko-KR");
+  const rows = ITEMS.map((it,i) => {
+    const s = itemState[it.id];
+    const badge = s.status === "fix" ? `<span class="doc-badge fix">정정완료</span>` : (s.status === "ok" ? `<span class="doc-badge ok">이상없음</span>` : "-");
+    return `<tr><td style="text-align:center;">${i+1}</td><td><b>${it.title}</b><br/>${it.desc}</td><td style="text-align:center;">${badge}</td></tr>`;
+  }).join("");
+  const corrRows = corrections.map((c,i) => `<tr><td style="text-align:center;">${i+1}</td><td>${(c.path||"").replace(/</g,"&lt;")}</td><td>${(c.before||"").replace(/</g,"&lt;")}</td><td>${(c.after||"").replace(/</g,"&lt;")}</td></tr>`).join("");
+  const submitter = document.getElementById("submitter").value.trim() || "-";
+  const head = document.getElementById("head").value.trim() || "-";
+
+  document.getElementById("print-content").innerHTML = `
+    <div class="doc-title-bar">유한대학교 2026학년도 하반기 대학정보공시 자체 점검 결과</div>
+    <table class="doc-info-table" style="margin-top:0; border-top:none;">
+      <tr><td class="lbl">학과(전공)</td><td>${currentDept || "(미선택)"}</td><td class="lbl">점검시기</td><td>2026-하반기</td></tr>
+      <tr><td class="lbl">작 성 자</td><td>${submitter}</td><td class="lbl">학 과 장</td><td>${head}</td></tr>
+      <tr><td class="lbl">제출일시</td><td>${submittedAt || "(미제출)"}</td><td class="lbl">출력일시</td><td>${now}</td></tr>
+    </table>
+
+    <div class="doc-section-title">점검 및 정비 결과</div>
+    <table class="doc-table">
+      <thead><tr><th style="width:44px; text-align:center;">연번</th><th>점검사항 및 정비 방법</th><th style="width:100px; text-align:center;">결과</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    ${corrections.length ? `
+    <div class="doc-section-title">정정사항</div>
+    <table class="doc-table">
+      <thead><tr><th style="width:44px; text-align:center;">연번</th><th>수정 대상 경로</th><th>수정 전</th><th>수정 후</th></tr></thead>
+      <tbody>${corrRows}</tbody>
+    </table>` : ""}
+  `;
+}
+
+function openPrintView(){
+  if (!currentDept){ showModal("먼저 학과(전공)를 선택해 주세요."); return; }
+  buildPrintSheet();
+  printReturnView = "dept-view";
+  switchView("print-view");
+}
+document.getElementById("print-btn").addEventListener("click", openPrintView);
+document.getElementById("print-back-btn").addEventListener("click", () => switchView(printReturnView));
+document.getElementById("print-now-btn").addEventListener("click", () => window.print());
+
+function refreshApiBanners(){
+  const connected = !!getApiUrl();
+  document.getElementById("banner-unsupported").classList.toggle("show", !connected);
+  document.getElementById("org-banner-unsupported").classList.toggle("show", !connected);
+}
+refreshApiBanners();
+
+/* ───────── API 설정 모달 ───────── */
+document.getElementById("api-settings-btn").addEventListener("click", () => {
+  document.getElementById("api-url-input").value = getApiUrl();
+  document.getElementById("api-test-result").textContent = "";
+  document.getElementById("api-modal-overlay").classList.add("show");
+});
+document.getElementById("api-close-btn").addEventListener("click", () => {
+  document.getElementById("api-modal-overlay").classList.remove("show");
+});
+document.getElementById("api-modal-overlay").addEventListener("click", (e) => {
+  if (e.target.id === "api-modal-overlay") document.getElementById("api-modal-overlay").classList.remove("show");
+});
+document.getElementById("api-save-btn").addEventListener("click", () => {
+  setApiUrl(document.getElementById("api-url-input").value.trim());
+  refreshApiBanners();
+  document.getElementById("api-test-result").textContent = "저장되었습니다.";
+  document.getElementById("api-test-result").style.color = "var(--ok)";
+});
+document.getElementById("api-test-btn").addEventListener("click", async () => {
+  const url = document.getElementById("api-url-input").value.trim();
+  const resultEl = document.getElementById("api-test-result");
+  if (!url){ resultEl.textContent = "URL을 먼저 입력해 주세요."; resultEl.style.color = "var(--fix)"; return; }
+  resultEl.textContent = "연결 확인 중...";
+  resultEl.style.color = "var(--ink-soft)";
+  try{
+    const res = await fetch(url, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({action:"list", prefix:""}) });
+    if (!res.ok) throw new Error("bad response");
+    await res.json();
+    resultEl.textContent = "✔ 연결에 성공했습니다.";
+    resultEl.style.color = "var(--ok)";
+  }catch(e){
+    resultEl.textContent = "✕ 연결에 실패했습니다. URL과 배포 설정(액세스: 모든 사용자)을 확인해 주세요.";
+    resultEl.style.color = "var(--fix)";
+  }
+});
+
+/* ═════════════════════ 부서 자체점검 ═════════════════════ */
+const ORG_GROUPS = [
+  { group: "교무처", items: ["학사지원팀", "지식정보팀", "평생교육원", "기초융합교육원", "AX혁신지원센터", "교수학습지원센터", "교육품질인증센터"] },
+  { group: "입학·학생처", items: ["입학지원팀", "개방형입학지원센터", "학사학위지원센터", "미디어홍보센터", "학생복지팀", "학생상담센터", "지역공유 장애학생지원센터"] },
+  { group: "전략기획처", items: ["전략기획팀"] },
+  { group: "대외협력처", items: ["대외협력팀", "국제협력센터", "한국어교육원", "K-CULTURE센터"] },
+  { group: "일자리지원처", items: ["일자리지원팀", "현장실습지원센터", "창업지원센터"] },
+  { group: "총무처", items: ["총무회계팀", "시설안전관재팀"] },
+  { group: "산학협력단", items: ["산학협력팀", "학교기업센터", "AI영상센터", "AI헬스케어센터", "요양보호사교육원", "지역협업센터(RCC)"] },
+  { group: "사업통합관리본부", items: ["사업통합운영관리팀", "일학습병행사업단", "자율혁신지원사업단", "신산업특화2.0사업단", "앵커사업단", "부트캠프사업단", "AID지원사업단", "초광역첨단바이오사업단"] },
+  { group: "총장 직속", items: ["감사실", "인권센터", "캠퍼스디자인센터"] },
+  { group: "법인", items: ["법인사무국"] },
+];
+
+const ORG_DISCLOSURE_ITEMS = {
+  "AX혁신지원센터": ["12-나-3. 대학 강의 공개 현황", "12-바. 대학의 원격강좌 현황"],
+  "감사실": ["10-가. 위반 내용 및 조치 결과"],
+  "국제협력센터": ["4-바-1. 외국학생 현황"],
+  "대외협력팀": ["12-라-2. 외국대학과 학점 교류 현황", "12-마. 대학의 사회봉사 역량"],
+  "법인사무국": ["8-라. 예·결산(합산재무제표) 현황", "8-마-1. 자금예산서(예산)", "8-마-2. 자금계산서(결산)", "8-마-2-(1). 감사증명서", "8-마-3. 운영(손익) 계산서", "8-마-4. 재무상태표", "8-마-5. 법인회계 적립금 운용계획서", "14-가. 정관", "14-나. 법인의 임원 현황", "14-다. 교지(校地) 확보 현황"],
+  "산학협력팀": ["12-카-3. 학교기업 운영현황", "12-타. 기술이전 수입료 및 계약 실적", "12-파. 특허 출원 및 등록 실적", "12-거. 기술지주회사 운영 현황"],
+  "시설안전관재팀": ["12-차. 공동활용 연구장비 운영 현황", "14-라. 교사(校舍)시설 확보 현황", "14-하-1. 실험·실습실 안전관리 현황", "14-하-2. 시설 안전관리 현황"],
+  "인권센터": ["14-타. 성폭력·성희롱·성매매 및 가정폭력 예방교육 실시 현황", "14-파. 성폭력·성희롱 상담기구 운영 현황"],
+  "일자리지원팀": ["5-나. 졸업생의 진학 현황", "5-다. 졸업생의 취업 현황", "12-카-2. 캡스톤 디자인(창의적 설계) 운영 현황"],
+  "일학습병행사업단": ["12-카-4-(1). 계약학과 설치 운영 현황"],
+  "입학지원팀": ["3-가-1. 신입생 모집요강", "3-가-2. 편입생 모집요강", "4-가. 입학전형 유형별 선발 결과", "4-나. 기회 균형 선발 결과", "4-다. 신입생 충원 현황", "4-라-2. 편입학 선발 결과", "4-자. 신입생의 출신 고등학교 유형별 현황", "8-카-1-(1). 입학전형료 수입 현황", "8-카-1-(2). 입학전형 관련 지출 현황", "8-카-2. 입학전형료 산정 근거"],
+  "전략기획팀": ["8-라. 예·결산(합산재무제표) 현황", "8-바-1. 자금예산서(예산)", "8-바-1-(1). 교비회계(통합)", "8-바-1-(2). 등록금회계", "8-바-1-(2)-1. 잉여금처리 원칙", "8-바-1-(3). 비등록금회계", "8-바-5. 교비회계 적립금 운용계획서", "9-가-2. 등록금심의위원회 회의록", "11-가-1. 학교 발전계획 및 특성화 계획", "14-자-1. 대학 자체 평가 결과", "14-자-2. 대학별 평가 인증 현황"],
+  "지식정보팀": ["13-가. 장서 보유 및 도서관 예산 현황", "14-하-3. 정보보안 및 개인정보보호 수준 진단"],
+  "창업지원센터": ["12-하-1-(1). 교원의 창업 및 창업지원 현황", "12-하-1-(2). 학생의 창업 및 창업지원 현황", "12-하-2. 창업교육 지원 현황"],
+  "총무회계팀": ["8-바-2-(1). 교비회계(통합)", "8-바-2-(2). 등록금회계", "8-바-2-(3). 비등록금회계", "8-바-3-(1). 교비회계(통합)", "8-바-3-(2). 등록금회계", "8-바-3-(3). 비등록금회계", "8-바-4-(1). 교비회계(통합)", "8-바-4-(2). 등록금회계", "8-바-4-(3). 비등록금회계", "8-사. 적립금 현황", "8-아. 기부금 현황", "8-자-1. 현금예산서(예산)", "8-자-2. 현금흐름표(결산)", "8-자-3. 운영(손익) 계산서", "8-자-4. 재무상태표", "8-차-1. 등록금 현황", "8-차-2. 등록금 납부제도 현황", "8-타. 대학의 장, 이사장 및 상근 이사의 업무추진비 사용 현황", "9-가-1. 등록금 산정근거", "9-나-2. 학생 1인당 교육비(사립)", "14-바-1. 수익용 기본재산 확보 현황", "14-바-2. 법정부담금 부담 현황", "14-사. 직원 현황", "14-하-3. 정보보안 및 개인정보보호 수준 진단"],
+  "학사지원팀": ["1-가. 학교규칙 및 그 밖에 학교운영에 관한 각종 규정", "2-가-1. 전공과목 성적 분포", "2-가-2. 교양과목 성적 분포", "2-가-3. 교직과목 성적 분포", "2-가-4. 졸업생의 졸업성적 분포", "4-라-1. 재학생 충원율", "4-마. 재적 학생 현황", "4-바-2. 외국학생 중도탈락 현황", "4-사. 중도탈락 학생 현황", "5-가. 졸업생 현황", "6-가-1. 전체 교원 대비 전임교원 현황", "6-가-2. 전체 신규 전임교원 현황", "6-나-(1). 전임교원 1인당 학생 수 및 전임교원 확보율(전문대학, 기능대학)", "6-다-1. 국가별 외국인 전임교원 현황", "6-다-2. 전공계열별 외국인 전임교원 현황", "7-가. 전임교원의 연구 실적", "12-가. 연구비 수혜 실적", "12-나-1. 학생 규모별 강좌수", "12-나-2. 교원 강의 담당 비율", "12-사. 산학협력 친화형 교원 인사 운영 현황", "12-아. 산업체 경력 전임교원 현황", "12-카-4-(2). 주문식 교육과정 설치 운영 현황", "13-나. 대학 부설 연구소 현황", "14-차. 강사 강의료"],
+  "학사학위지원센터": ["4-아. 학사학위 전공심화과정 학생 현황"],
+  "학생복지팀": ["12-다-1. 장학금 수혜 현황", "12-다-2. 학자금 대출 현황", "14-마-1. 기숙사 수용 현황", "14-마-2-(2). 기숙사 운영 결과(사립_행복_민자)", "14-마-2-(4). 기숙사 운영 결과(사립_직영)", "14-마-3. 기숙사비 납부제도 현황", "14-카. 장애학생지원체제 구축 및 운영 현황", "14-하-4. 안전관리 계획 및 안전사고 보험(공제) 현황"],
+  "현장실습지원센터": ["12-카-1. 현장실습 운영 현황"],
+};
+const ALL_ORGS = ORG_GROUPS.flatMap(g => g.items);
+function orgGroupOf(name){ return (ORG_GROUPS.find(g => g.items.includes(name)) || {}).group || ""; }
+
+const ORG_CHECK_ITEMS = [
+  { id:"org-ad-check", title:"온·오프라인 홍보 매체 허위광고 점검",
+    desc:"대학 홈페이지 및 부서 관련 홈페이지, 학과별 홈페이지, 블로그, 페이스북, 인스타그램, X(前 트위터) 등 온라인 매체 / 대학 및 학과 홍보 브로슈어 등 오프라인 매체의 허위광고(과장·과소광고) 내용 확인",
+    memo:"※ 대학 홈페이지 및 부서 관련 홈페이지 내 기재된 사항에서 허위광고가 집중적으로 적발되는 사례가 많으므로 주의 요망" },
+  { id:"org-correction", title:"부정확·추정 기재 내용 정정",
+    desc:"부정확하거나 추정된 값을 기재하여 허위광고한 내용 포함 오류 발견 시 즉시 삭제 및 내용 정정",
+    memo:"※ 내용 정정 방법: 광고에 공시 데이터가 사용되는 경우 공시연도를 명확하게 기재. 내용에 대한 근거(출처, 연도 등)가 명시되지 않으면 현재 기준으로 간주(현재 기준이더라도 공시연도 기재 권장)" },
+  { id:"org-figures", title:"공시 수치 객관성 확인",
+    desc:"수치 등 객관적인 값 기재 시 대학알리미 정보 철저히 확인",
+    memo:"※ 확인 경로: 대학알리미(<a href=\"https://www.academyinfo.go.kr\" target=\"_blank\" rel=\"noopener\" style=\"color:var(--gold); text-decoration:underline;\">academyinfo.go.kr</a>) → '유한대학교' 검색 → 대학개별공시 클릭" }
+];
+const ORG_DISC_META = "최근 3년간 공시 항목 전체 입력 오류사항 체크<br/>(2026년 기준: 14개 분야, 65개 항목, 103개 세부항목)";
+
+let currentOrg = null;
+let orgItemState = {};      // ORG_CHECK_ITEMS 1~3 상태
+let orgDiscState = {};      // 공시항목별 상태 (key: 항목명)
+let orgCorrections = [];
+let orgCorrSeq = 0;
+let orgFinalized = false;
+let orgSubmittedAt = null;
+let orgCurrentStep = 0;
+
+function resetOrgState(){
+  orgItemState = {}; ORG_CHECK_ITEMS.forEach(it => orgItemState[it.id] = { status:null });
+  orgDiscState = {};
+  (ORG_DISCLOSURE_ITEMS[currentOrg] || []).forEach(name => orgDiscState[name] = { status:null, assignee:"" });
+  orgCorrections = []; orgCorrSeq = 0;
+}
+function orgKeyFor(name){ return "org-check:" + name; }
+
+function renderOrgMenu(){
+  const box = document.getElementById("org-menu");
+  box.innerHTML = "";
+  ORG_GROUPS.forEach(g => {
+    const col = document.createElement("div");
+    col.className = "dept-group";
+    const h3 = document.createElement("h3");
+    h3.textContent = g.group;
+    col.appendChild(h3);
+    g.items.forEach(name => {
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "dept-btn"; btn.dataset.name = name;
+      btn.textContent = name;
+      btn.addEventListener("click", () => selectOrg(name));
+      col.appendChild(btn);
+    });
+    box.appendChild(col);
+  });
+}
+document.getElementById("org-filter-input").addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#org-menu .dept-btn").forEach(btn => {
+    btn.classList.toggle("dim", !(!q || btn.dataset.name.toLowerCase().includes(q)));
+  });
+});
+
+function renderOrgItems(){
+  const tbody = document.getElementById("org-item-rows");
+  tbody.innerHTML = "";
+  ORG_CHECK_ITEMS.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td class="item-desc"><b>${item.title}</b><br/>${item.desc}<div class="memo">${item.memo}</div></td>
+      <td>
+        <div class="toggle" data-org-item="${item.id}">
+          <button type="button" class="ok-btn" data-status="ok">이상없음/해당없음</button>
+          <button type="button" class="fix-btn" data-status="fix">정정완료</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll(".toggle").forEach(t => {
+    const itemId = t.dataset.orgItem;
+    t.querySelector(".ok-btn").addEventListener("click", () => setOrgStatus(itemId, "ok"));
+    t.querySelector(".fix-btn").addEventListener("click", () => setOrgStatus(itemId, "fix"));
+  });
+
+  // 4. 공시 항목 (부서별 동적)
+  const discItems = ORG_DISCLOSURE_ITEMS[currentOrg] || [];
+  const tr4 = document.createElement("tr");
+  let bodyHtml;
+  if (discItems.length === 0){
+    bodyHtml = `<div class="memo" style="margin-top:8px; padding-left:0; text-indent:0;">현재 이 부서에 배정된 공시 항목이 없습니다.</div>`;
+  } else {
+    const rows = discItems.map(name => `
+      <tr data-disc-row="${name}">
+        <td>${name}</td>
+        <td><input type="text" class="disc-assignee" data-disc-assignee="${name}" placeholder="담당자 이름" value="${orgDiscState[name].assignee}" /></td>
+        <td>
+          <div class="disc-toggle" data-disc="${name}">
+            <button type="button" class="d-ok" data-status="ok">이상없음</button>
+            <button type="button" class="d-fix" data-status="fix">정정예정</button>
+          </div>
+        </td>
+      </tr>`).join("");
+    bodyHtml = `
+      <table class="disc-table">
+        <thead><tr><th>공시항목명</th><th style="width:120px;">담당자</th><th style="width:170px;">점검 및 정비 여부</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+  tr4.innerHTML = `
+    <td>4</td>
+    <td class="item-desc"><b>공시 항목</b><br/>${ORG_DISC_META}${bodyHtml}</td>
+    <td style="text-align:center; color:var(--ink-soft); font-size:11.5px;">항목별 개별 선택</td>`;
+  tbody.appendChild(tr4);
+
+  document.querySelectorAll(".disc-toggle").forEach(t => {
+    const name = t.dataset.disc;
+    t.querySelector(".d-ok").addEventListener("click", () => setOrgDiscStatus(name, "ok"));
+    t.querySelector(".d-fix").addEventListener("click", () => setOrgDiscStatus(name, "fix"));
+  });
+  document.querySelectorAll(".disc-assignee").forEach(inp => {
+    inp.addEventListener("input", (e) => { orgDiscState[inp.dataset.discAssignee].assignee = e.target.value; });
+  });
+
+  applyOrgItemButtonStates();
+}
+
+function applyOrgItemButtonStates(){
+  ORG_CHECK_ITEMS.forEach(item => {
+    const toggle = document.querySelector(`.toggle[data-org-item="${item.id}"]`);
+    if (!toggle) return;
+    const status = orgItemState[item.id].status;
+    toggle.querySelector(".ok-btn").classList.toggle("active", status === "ok");
+    toggle.querySelector(".ok-btn").classList.toggle("ok", status === "ok");
+    toggle.querySelector(".fix-btn").classList.toggle("active", status === "fix");
+    toggle.querySelector(".fix-btn").classList.toggle("fix", status === "fix");
+  });
+  Object.keys(orgDiscState).forEach(name => {
+    const t = document.querySelector(`.disc-toggle[data-disc="${CSS.escape(name)}"]`);
+    if (!t) return;
+    const status = orgDiscState[name].status;
+    t.querySelector(".d-ok").classList.toggle("active", status === "ok");
+    t.querySelector(".d-ok").classList.toggle("ok", status === "ok");
+    t.querySelector(".d-fix").classList.toggle("active", status === "fix");
+    t.querySelector(".d-fix").classList.toggle("fix", status === "fix");
+  });
+}
+
+function orgAllAnswered(){
+  const item123ok = ORG_CHECK_ITEMS.every(it => orgItemState[it.id].status !== null);
+  const discNames = Object.keys(orgDiscState);
+  const discOk = discNames.every(n => orgDiscState[n].status !== null && orgDiscState[n].assignee.trim() !== "");
+  return item123ok && discOk;
+}
+function orgUnansweredList(){
+  const missing = [];
+  ORG_CHECK_ITEMS.forEach(it => { if (orgItemState[it.id].status === null) missing.push(it.title); });
+  Object.keys(orgDiscState).forEach(name => {
+    const d = orgDiscState[name];
+    if (d.status === null) missing.push(name + " (점검 결과 미선택)");
+    else if (d.assignee.trim() === "") missing.push(name + " (담당자 미입력)");
+  });
+  return missing;
+}
+function orgAnyFix(){
+  const item123fix = ORG_CHECK_ITEMS.some(it => orgItemState[it.id].status === "fix");
+  const discFix = Object.values(orgDiscState).some(d => d.status === "fix");
+  return item123fix || discFix;
+}
+
+function setOrgStatus(itemId, status){
+  orgItemState[itemId].status = status;
+  applyOrgItemButtonStates();
+  }
+function setOrgDiscStatus(name, status){
+  orgDiscState[name].status = status;
+  applyOrgItemButtonStates();
+  }
+
+function addOrgCorrection(){
+  orgCorrSeq++;
+  orgCorrections.push({ id: orgCorrSeq, path:"", before:"", after:"" });
+  renderOrgFixCards();
+}
+function removeSelectedOrgCorrections(){
+  const checked = Array.from(document.querySelectorAll(".org-corr-select:checked")).map(cb => parseInt(cb.dataset.id));
+  if (checked.length === 0){ showModal("삭제할 정정사항을 먼저 선택해 주세요."); return; }
+  orgCorrections = orgCorrections.filter(c => !checked.includes(c.id));
+  renderOrgFixCards();
+}
+function renderOrgFixCards(){
+  const box = document.getElementById("org-fix-cards");
+  box.innerHTML = "";
+  if (!orgAnyFix()){
+    box.innerHTML = `<div class="h2-sub" style="margin:0;">정정완료·정정예정으로 표시한 항목이 없습니다. 바로 다음 단계로 진행해 주세요.</div>`;
+    return;
+  }
+  if (orgCorrections.length === 0){ orgCorrSeq++; orgCorrections.push({ id: orgCorrSeq, path:"", before:"", after:"" }); }
+
+  orgCorrections.forEach((c, idx) => {
+    const wrap = document.createElement("div");
+    wrap.className = "fix-card";
+    wrap.innerHTML = `
+      ${idx === 0 ? "" : `<div class="corr-head"><input type="checkbox" class="org-corr-select" data-id="${c.id}" /> 삭제 시 선택</div>`}
+      <div class="fix-path">
+        <label class="field-label">수정 대상 경로</label>
+        <input type="text" id="org-path-${c.id}" placeholder="예: (대학홈페이지) > 정보공시 > 공시항목명" value="${c.path}" />
+      </div>
+      <div class="ba-grid">
+        <div class="ba-box"><div class="ba-head">수정 전</div><textarea id="org-before-${c.id}" placeholder="현재 게시되어 있는 내용을 적어주세요.">${c.before}</textarea></div>
+        <div class="ba-box"><div class="ba-head">수정 후(예정)</div><textarea id="org-after-${c.id}" placeholder="수정완료(예정)한 내용을 적어주세요.">${c.after}</textarea></div>
+      </div>
+      <div class="example">
+        <div class="ex-row"><span class="ex-tag">예시1:</span><span>(수정 전) "70%의 높은 취업률"</span></div>
+        <div class="ex-row"><span class="ex-tag"></span><span>(수정 후) "취업률 68.8%(2025년 대학정보공시, 기준일자 2024.12.31.)"</span></div>
+        <div><b>→ "높은"이라는 허위·과장광고로 판단될 가능성이 있는 단어를 삭제하고, 정확한 출처와 수치를 기재하는 것으로 수정</b></div>
+        <div style="margin-top:8px;"></div>
+        <div class="ex-row"><span class="ex-tag">예시2:</span><span>(수정 전) [공시년도:2026] □□학과 △△전공 전임교원 직급 오기입 : 교수(여) 1명, 조교수(여)0명</span></div>
+        <div class="ex-row"><span class="ex-tag"></span><span>(수정 후) [공시년도:2026] □□학과 △△전공 전임교원 교수(여) 0명, 조교수(여)1명</span></div>
+        <div><b>→ 공시년도, 공시항목명, 수정 전/후 내용, 정정 사유 자세히 기입 후 "대학정보공시 오류정보 정정요청서" 업무연락 제출</b></div>
+      </div>`;
+    box.appendChild(wrap);
+    wrap.querySelector(`#org-path-${c.id}`).addEventListener("input", (e) => { c.path = e.target.value; });
+    wrap.querySelector(`#org-before-${c.id}`).addEventListener("input", (e) => { c.before = e.target.value; });
+    wrap.querySelector(`#org-after-${c.id}`).addEventListener("input", (e) => { c.after = e.target.value; });
+  });
+
+  const actions = document.createElement("div");
+  actions.className = "corr-actions";
+  actions.innerHTML = `<button type="button" class="add-btn" id="org-add-corr-btn">+ 추가</button><button type="button" class="del-btn" id="org-del-corr-btn">🗑 삭제</button>`;
+  box.appendChild(actions);
+  document.getElementById("org-add-corr-btn").addEventListener("click", addOrgCorrection);
+  document.getElementById("org-del-corr-btn").addEventListener("click", removeSelectedOrgCorrections);
+}
+
+function updateOrgStepper(){
+  document.querySelectorAll(".stepper .st[data-org-step]").forEach(el => {
+    const s = parseInt(el.dataset.orgStep);
+    el.classList.toggle("active", s === orgCurrentStep);
+    el.classList.toggle("done", s < orgCurrentStep);
+  });
+}
+function showOrgStep(n){
+  orgCurrentStep = n;
+  [0,1,2,3].forEach(i => document.getElementById("org-step-"+i).style.display = (i===n ? "block" : "none"));
+  updateOrgStepper();
+  if (n === 2) renderOrgFixCards();
+  if (n === 3) updateOrgStats();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("[data-org-goto]").forEach(btn => btn.addEventListener("click", () => showOrgStep(parseInt(btn.dataset.orgGoto))));
+
+document.getElementById("org-to-step1-btn").addEventListener("click", () => {
+  document.getElementById("org-step1-label").textContent = "선택된 부서: " + currentOrg;
+  showOrgStep(1);
+});
+document.getElementById("org-to-step2-btn").addEventListener("click", () => {
+  const missing = orgUnansweredList();
+  if (missing.length > 0){
+    showModal("입력되지 않은 항목이 있습니다.\n\n다음 항목의 점검 결과를 선택해 주세요:\n" + missing.map(m => "· " + m).join("\n"));
+    return;
+  }
+  showOrgStep(orgAnyFix() ? 2 : 3);
+});
+document.getElementById("org-to-step3-btn").addEventListener("click", () => {
+  if (orgAnyFix()){
+    const incomplete = orgCorrections.length === 0 || orgCorrections.some(c => !c.path.trim() || !c.before.trim() || !c.after.trim());
+    if (incomplete){
+      showModal("점검표에서 '정정완료' 또는 '정정예정'으로 표시하신 항목이 있습니다.\n\n수정 내역 확인을 위해 정정사항 박스마다 수정 대상 경로 · 수정 전 · 수정 후 내용을 반드시 작성하여 주세요.\n\n미작성 항목을 모두 채운 뒤 다시 진행해 주세요.");
+      return;
+    }
+  }
+  showOrgStep(3);
+});
+document.getElementById("org-back-to-check-btn").addEventListener("click", () => {
+  showOrgStep(orgAnyFix() ? 2 : 1);
+});
+
+function updateOrgStats(){
+  const discVals = Object.values(orgDiscState);
+  const total = ORG_CHECK_ITEMS.length + discVals.length;
+  const okCount = ORG_CHECK_ITEMS.filter(it => orgItemState[it.id].status === "ok").length + discVals.filter(d => d.status === "ok").length;
+  const fixCount = ORG_CHECK_ITEMS.filter(it => orgItemState[it.id].status === "fix").length + discVals.filter(d => d.status === "fix").length;
+  document.getElementById("org-stat-total").textContent = total;
+  document.getElementById("org-stat-ok").textContent = okCount;
+  document.getElementById("org-stat-fix").textContent = fixCount;
+}
+
+async function selectOrg(name){
+  currentOrg = name;
+  document.querySelectorAll("#org-menu .dept-btn").forEach(b => b.classList.toggle("selected", b.dataset.name === name));
+  const line = document.getElementById("org-selected-line");
+  line.textContent = "선택됨: " + name;
+  line.classList.add("show");
+  document.getElementById("org-to-step1-btn").disabled = false;
+  resetOrgState();
+  renderOrgItems();
+    document.getElementById("org-banner-loaded").classList.remove("show");
+  document.getElementById("org-save-status").textContent = "부서: " + name + " (아직 저장 안 됨)";
+  orgFinalized = false; orgSubmittedAt = null;
+
+  if (STORAGE_SUPPORTED){
+    try{
+      const rec = await appStorage.get(orgKeyFor(name), true);
+      if (rec){
+        const data = JSON.parse(rec.value);
+        applyOrgRecord(data);
+        const bl = document.getElementById("org-banner-loaded");
+        bl.textContent = data.finalized
+          ? `이 부서는 이미 최종 제출되었습니다 (제출일시: ${data.submittedAt}, 작성자: ${data.submitter}). 필요 시 수정 후 다시 제출하면 최신 내용으로 갱신됩니다.`
+          : `임시저장된 내용을 불러왔습니다 (저장일시: ${data.savedAt}).`;
+        bl.classList.add("show");
+        document.getElementById("org-save-status").textContent = "부서: " + name + (data.finalized ? " · 제출완료" : " · 임시저장됨");
+              }
+    }catch(e){}
+  }
+}
+function applyOrgRecord(data){
+  document.getElementById("org-submitter").value = data.submitter || "";
+  document.getElementById("org-manager").value = data.manager || "";
+  document.getElementById("org-head").value = data.head || "";
+  orgFinalized = !!data.finalized;
+  orgSubmittedAt = data.submittedAt || null;
+  (data.items||[]).forEach(saved => { if (orgItemState[saved.id]) orgItemState[saved.id] = { status: saved.status }; });
+  (data.discItems||[]).forEach(saved => { if (Object.prototype.hasOwnProperty.call(orgDiscState, saved.name)) orgDiscState[saved.name] = { status: saved.status, assignee: saved.assignee || "" }; });
+  orgCorrections = (data.corrections || []).map(c => { orgCorrSeq++; return { id: orgCorrSeq, path:c.path||"", before:c.before||"", after:c.after||"" }; });
+  applyOrgItemButtonStates();
+  document.querySelectorAll(".disc-assignee").forEach(inp => {
+    const name = inp.dataset.discAssignee;
+    if (orgDiscState[name]) inp.value = orgDiscState[name].assignee || "";
+  });
+}
+function buildOrgRecord(finalize){
+  return {
+    department: currentOrg,
+    submitter: document.getElementById("org-submitter").value.trim(),
+    manager: document.getElementById("org-manager").value.trim(),
+    head: document.getElementById("org-head").value.trim(),
+    finalized: finalize ? true : orgFinalized,
+    submittedAt: finalize ? new Date().toLocaleString("ko-KR") : orgSubmittedAt,
+    savedAt: new Date().toLocaleString("ko-KR"),
+    items: ORG_CHECK_ITEMS.map(it => ({ id: it.id, status: orgItemState[it.id].status })),
+    discItems: Object.keys(orgDiscState).map(name => ({ name, status: orgDiscState[name].status, assignee: orgDiscState[name].assignee })),
+    corrections: orgCorrections.map(c => ({ path: c.path, before: c.before, after: c.after }))
+  };
+}
+async function persistOrg(record){
+  if (!STORAGE_SUPPORTED){
+    showModal("이 환경에서는 자동 저장이 지원되지 않습니다. 아래 내용을 별도로 저장해 주세요:\n\n" + JSON.stringify(record, null, 2));
+    return false;
+  }
+  await appStorage.set(orgKeyFor(currentOrg), JSON.stringify(record), true);
+  let idx = {};
+  try{
+    const idxRec = await appStorage.get("org-check-index", true);
+    if (idxRec) idx = JSON.parse(idxRec.value);
+  }catch(e){}
+  idx[currentOrg] = { finalized: record.finalized, savedAt: record.savedAt, submittedAt: record.submittedAt };
+  await appStorage.set("org-check-index", JSON.stringify(idx), true);
+  return true;
+}
+document.getElementById("org-draft-btn").addEventListener("click", async () => {
+  if (!currentOrg){ showModal("먼저 부서를 선택해 주세요."); return; }
+  const record = buildOrgRecord(false);
+  if (await persistOrg(record)) document.getElementById("org-save-status").textContent = `부서: ${currentOrg} · 임시저장됨 (${record.savedAt})`;
+});
+document.getElementById("org-submit-final-btn").addEventListener("click", async () => {
+  if (!currentOrg){ showModal("먼저 부서를 선택해 주세요."); return; }
+  if (!document.getElementById("org-submitter").value.trim()){ showModal("작성자 이름을 입력해 주세요."); return; }
+  if (!document.getElementById("org-manager").value.trim()){ showModal("팀장/센터장 이름을 입력해 주세요.\n중간관리자가 없는 경우(예. 사업단) 하이픈 기호( - )를 입력해 주세요."); return; }
+  if (!document.getElementById("org-head").value.trim()){ showModal("부서장(처장/단장/원장/실장) 이름을 입력해 주세요."); return; }
+  if (!orgAllAnswered()){ showModal("모든 항목의 점검 결과를 선택해 주세요."); return; }
+  const record = buildOrgRecord(true);
+  if (await persistOrg(record)){
+    orgFinalized = true; orgSubmittedAt = record.submittedAt;
+    document.getElementById("org-save-status").textContent = `부서: ${currentOrg} · 제출완료 (${record.submittedAt})`;
+    showModal("최종 제출되었습니다. 감사합니다.");
+  }
+});
+
+function buildOrgPrintSheet(){
+  const now = new Date().toLocaleString("ko-KR");
+  const rows123 = ORG_CHECK_ITEMS.map((it,i) => {
+    const s = orgItemState[it.id];
+    const badge = s.status === "ok" ? `<span class="doc-badge ok">이상없음/해당없음</span>` : (s.status === "fix" ? `<span class="doc-badge fix">정정완료</span>` : "-");
+    return `<tr><td style="text-align:center;">${i+1}</td><td><b>${it.title}</b><br/>${it.desc}</td><td style="text-align:center;">${badge}</td></tr>`;
+  }).join("");
+  const discNames = Object.keys(orgDiscState);
+  const discRows = discNames.map((name,i) => {
+    const d = orgDiscState[name];
+    const label = d.status === "fix" ? `<span class="doc-badge fix">정정예정</span>` : (d.status === "ok" ? `<span class="doc-badge ok">이상없음</span>` : "-");
+    return `<tr><td style="text-align:center;">${i+1}</td><td>${name}</td><td>${d.assignee||"-"}</td><td style="text-align:center;">${label}</td></tr>`;
+  }).join("");
+  const corrRows = orgCorrections.map((c,i) => `<tr><td style="text-align:center;">${i+1}</td><td>${(c.path||"").replace(/</g,"&lt;")}</td><td>${(c.before||"").replace(/</g,"&lt;")}</td><td>${(c.after||"").replace(/</g,"&lt;")}</td></tr>`).join("");
+  const submitter = document.getElementById("org-submitter").value.trim() || "-";
+  const manager = document.getElementById("org-manager").value.trim() || "-";
+  const head = document.getElementById("org-head").value.trim() || "-";
+
+  document.getElementById("print-content").innerHTML = `
+    <div class="doc-title-bar">유한대학교 2026학년도 하반기 대학정보공시 자체 점검 결과 (부서)</div>
+    <table class="doc-info-table" style="margin-top:0; border-top:none;">
+      <tr><td class="lbl">부서</td><td>${currentOrg || "(미선택)"}</td><td class="lbl">점검시기</td><td>2026-하반기</td></tr>
+      <tr><td class="lbl">작 성 자</td><td>${submitter}</td><td class="lbl">팀장/센터장</td><td>${manager}</td></tr>
+      <tr><td class="lbl">부서장(처장/단장/원장/실장)</td><td>${head}</td><td class="lbl">제출일시</td><td>${orgSubmittedAt || "(미제출)"}</td></tr>
+      <tr><td class="lbl">출력일시</td><td colspan="3">${now}</td></tr>
+    </table>
+
+    <div class="doc-section-title">점검 및 정비 결과</div>
+    <table class="doc-table">
+      <thead><tr><th style="width:44px; text-align:center;">연번</th><th>점검사항 및 정비 방법</th><th style="width:100px; text-align:center;">결과</th></tr></thead>
+      <tbody>${rows123}</tbody>
+    </table>
+
+    ${discNames.length ? `
+    <div class="doc-section-title">공시 항목 점검 결과</div>
+    <table class="doc-table">
+      <thead><tr><th style="width:44px; text-align:center;">연번</th><th>공시항목명</th><th style="width:90px;">담당자</th><th style="width:100px; text-align:center;">결과</th></tr></thead>
+      <tbody>${discRows}</tbody>
+    </table>` : ""}
+
+    ${orgCorrections.length ? `
+    <div class="doc-section-title">정정사항</div>
+    <table class="doc-table">
+      <thead><tr><th style="width:44px; text-align:center;">연번</th><th>수정 대상 경로</th><th>수정 전</th><th>수정 후</th></tr></thead>
+      <tbody>${corrRows}</tbody>
+    </table>` : ""}
+  `;
+}
+function openOrgPrintView(){
+  if (!currentOrg){ showModal("먼저 부서를 선택해 주세요."); return; }
+  buildOrgPrintSheet();
+  printReturnView = "org-view";
+  switchView("print-view");
+}
+document.getElementById("org-print-btn").addEventListener("click", openOrgPrintView);
+
+renderOrgMenu();
+
+
+/* ───────── 관리자 현황판 ───────── */
+document.getElementById("admin-unlock-btn").addEventListener("click", () => {
+  const val = document.getElementById("admin-code-input").value;
+  if (val === ADMIN_CODE){
+    document.getElementById("admin-gate").style.display = "none";
+    document.getElementById("admin-dashboard").style.display = "block";
+    loadAdminData();
+    loadAdminOrgData();
+  } else {
+    showModal("접근코드가 올바르지 않습니다.");
+  }
+});
+document.getElementById("admin-refresh-btn").addEventListener("click", loadAdminData);
+document.getElementById("admin-org-refresh-btn").addEventListener("click", loadAdminOrgData);
+
+async function loadAdminData(){
+  let idx = {};
+  if (STORAGE_SUPPORTED){
+    try{
+      const idxRec = await appStorage.get("dept-check-index", true);
+      if (idxRec) idx = JSON.parse(idxRec.value);
+    }catch(e){}
+  }
+  let done = 0, draft = 0;
+  const list = document.getElementById("admin-list");
+  list.innerHTML = "";
+  ALL_DEPTS.forEach(name => {
+    const rec = idx[name];
+    let status = "none", label = "미작성";
+    if (rec){
+      if (rec.finalized){ status = "done"; label = "제출완료"; done++; }
+      else { status = "draft"; label = "임시저장"; draft++; }
+    }
+    const row = document.createElement("div");
+    row.className = "admin-row";
+    row.innerHTML = `
+      <div><span class="dname">${name}</span><span class="dgroup">${groupOf(name)}</span></div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="admin-badge ${status}">${label}${rec ? " · " + (rec.finalized ? rec.submittedAt : rec.savedAt) : ""}</span>
+        ${rec ? `<button type="button" class="detail-toggle" data-dept="${name}">상세보기</button>` : ""}
+        ${rec ? `<button type="button" class="admin-del-btn" data-dept-del="${name}">삭제</button>` : ""}
+      </div>
+      ${rec ? `<div class="admin-detail" id="detail-${name}"></div>` : ""}
+    `;
+    list.appendChild(row);
+  });
+  document.getElementById("admin-stats").innerHTML = `
+    <div class="stat-card"><div class="num">${ALL_DEPTS.length}</div><div class="lbl">전체 학과</div></div>
+    <div class="stat-card ok"><div class="num">${done}</div><div class="lbl">제출완료</div></div>
+    <div class="stat-card gold"><div class="num">${draft}</div><div class="lbl">임시저장</div></div>
+    <div class="stat-card fix"><div class="num">${ALL_DEPTS.length - done - draft}</div><div class="lbl">미작성</div></div>`;
+
+  list.querySelectorAll("[data-dept-del]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dept = btn.dataset.deptDel;
+      showConfirm(`'${dept}'의 제출(또는 임시저장) 기록을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`, async () => {
+        try{
+          await appStorage.delete(keyFor(dept), true);
+          const idxRec = await appStorage.get("dept-check-index", true);
+          if (idxRec){
+            const idxData = JSON.parse(idxRec.value);
+            delete idxData[dept];
+            await appStorage.set("dept-check-index", JSON.stringify(idxData), true);
+          }
+          loadAdminData();
+        }catch(e){
+          showModal("삭제 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        }
+      });
+    });
+  });
+
+  list.querySelectorAll(".detail-toggle").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const dept = btn.dataset.dept;
+      const panel = document.getElementById("detail-" + dept);
+      const isOpen = panel.classList.contains("open");
+      if (isOpen){ panel.classList.remove("open"); return; }
+      if (!panel.dataset.loaded){
+        try{
+          const rec = await appStorage.get(keyFor(dept), true);
+          const data = JSON.parse(rec.value);
+          const rows = data.items.map((it,i) => {
+            const meta = ITEMS.find(x => x.id === it.id);
+            const statusLabel = it.status === "fix" ? "정정완료" : "이상없음";
+            return `<tr><td>${i+1}</td><td>${meta ? meta.title : it.id}</td><td>${statusLabel}</td></tr>`;
+          }).join("");
+          const corrRows = (data.corrections||[]).map((c,i) => `<tr><td>${i+1}</td><td>${c.path||""}</td><td>${c.before||""}</td><td>${c.after||""}</td></tr>`).join("");
+          panel.innerHTML = `
+            <div>작성자: <b>${data.submitter||"-"}</b> · 학과장: <b>${data.head||"-"}</b> · 마지막 저장: ${data.savedAt||"-"}${data.finalized ? " · 제출일시: " + data.submittedAt : ""}</div>
+            <table><thead><tr><th>연번</th><th>항목</th><th>결과</th></tr></thead><tbody>${rows}</tbody></table>
+            ${corrRows ? `<div style="margin-top:8px; font-weight:700;">정정사항</div><table><thead><tr><th>연번</th><th>수정 대상 경로</th><th>수정 전</th><th>수정 후</th></tr></thead><tbody>${corrRows}</tbody></table>` : ""}`;
+          panel.dataset.loaded = "1";
+        }catch(e){
+          panel.innerHTML = "데이터를 불러오지 못했습니다.";
+        }
+      }
+      panel.classList.add("open");
+    });
+  });
+}
+
+async function loadAdminOrgData(){
+  let idx = {};
+  if (STORAGE_SUPPORTED){
+    try{
+      const idxRec = await appStorage.get("org-check-index", true);
+      if (idxRec) idx = JSON.parse(idxRec.value);
+    }catch(e){}
+  }
+  let done = 0, draft = 0;
+  const list = document.getElementById("admin-org-list");
+  list.innerHTML = "";
+  ALL_ORGS.forEach(name => {
+    const rec = idx[name];
+    let status = "none", label = "미작성";
+    if (rec){
+      if (rec.finalized){ status = "done"; label = "제출완료"; done++; }
+      else { status = "draft"; label = "임시저장"; draft++; }
+    }
+    const row = document.createElement("div");
+    row.className = "admin-row";
+    row.innerHTML = `
+      <div><span class="dname">${name}</span><span class="dgroup">${orgGroupOf(name)}</span></div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="admin-badge ${status}">${label}${rec ? " · " + (rec.finalized ? rec.submittedAt : rec.savedAt) : ""}</span>
+        ${rec ? `<button type="button" class="detail-toggle" data-org-detail="${name}">상세보기</button>` : ""}
+        ${rec ? `<button type="button" class="admin-del-btn" data-org-del="${name}">삭제</button>` : ""}
+      </div>
+      ${rec ? `<div class="admin-detail" id="org-detail-${name}"></div>` : ""}
+    `;
+    list.appendChild(row);
+  });
+  document.getElementById("admin-org-stats").innerHTML = `
+    <div class="stat-card"><div class="num">${ALL_ORGS.length}</div><div class="lbl">전체 부서</div></div>
+    <div class="stat-card ok"><div class="num">${done}</div><div class="lbl">제출완료</div></div>
+    <div class="stat-card gold"><div class="num">${draft}</div><div class="lbl">임시저장</div></div>
+    <div class="stat-card fix"><div class="num">${ALL_ORGS.length - done - draft}</div><div class="lbl">미작성</div></div>`;
+
+  list.querySelectorAll("[data-org-del]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const org = btn.dataset.orgDel;
+      showConfirm(`'${org}'의 제출(또는 임시저장) 기록을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`, async () => {
+        try{
+          await appStorage.delete(orgKeyFor(org), true);
+          const idxRec = await appStorage.get("org-check-index", true);
+          if (idxRec){
+            const idxData = JSON.parse(idxRec.value);
+            delete idxData[org];
+            await appStorage.set("org-check-index", JSON.stringify(idxData), true);
+          }
+          loadAdminOrgData();
+        }catch(e){
+          showModal("삭제 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        }
+      });
+    });
+  });
+
+  list.querySelectorAll("[data-org-detail]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const org = btn.dataset.orgDetail;
+      const panel = document.getElementById("org-detail-" + org);
+      const isOpen = panel.classList.contains("open");
+      if (isOpen){ panel.classList.remove("open"); return; }
+      if (!panel.dataset.loaded){
+        try{
+          const rec = await appStorage.get(orgKeyFor(org), true);
+          const data = JSON.parse(rec.value);
+          const rows = data.items.map((it,i) => {
+            const meta = ORG_CHECK_ITEMS.find(x => x.id === it.id);
+            const statusLabel = it.status === "ok" ? "이상없음/해당없음" : (it.status === "fix" ? "정정완료" : "-");
+            return `<tr><td>${i+1}</td><td>${meta ? meta.title : it.id}</td><td>${statusLabel}</td></tr>`;
+          }).join("");
+          const discRows = (data.discItems||[]).map((d,i) => {
+            const label = d.status === "fix" ? "정정예정" : (d.status === "ok" ? "이상없음" : "-");
+            return `<tr><td>${i+1}</td><td>${d.name}</td><td>${d.assignee||"-"}</td><td>${label}</td></tr>`;
+          }).join("");
+          const corrRows = (data.corrections||[]).map((c,i) => `<tr><td>${i+1}</td><td>${c.path||""}</td><td>${c.before||""}</td><td>${c.after||""}</td></tr>`).join("");
+          panel.innerHTML = `
+            <div>작성자: <b>${data.submitter||"-"}</b> · 팀장/센터장: <b>${data.manager||"-"}</b> · 부서장(처장/단장/원장/실장): <b>${data.head||"-"}</b> · 마지막 저장: ${data.savedAt||"-"}${data.finalized ? " · 제출일시: " + data.submittedAt : ""}</div>
+            <table><thead><tr><th>연번</th><th>항목</th><th>결과</th></tr></thead><tbody>${rows}</tbody></table>
+            ${discRows ? `<div style="margin-top:8px; font-weight:700;">공시 항목</div><table><thead><tr><th>연번</th><th>공시항목명</th><th>담당자</th><th>결과</th></tr></thead><tbody>${discRows}</tbody></table>` : ""}
+            ${corrRows ? `<div style="margin-top:8px; font-weight:700;">정정사항</div><table><thead><tr><th>연번</th><th>수정 대상 경로</th><th>수정 전</th><th>수정 후</th></tr></thead><tbody>${corrRows}</tbody></table>` : ""}`;
+          panel.dataset.loaded = "1";
+        }catch(e){
+          panel.innerHTML = "데이터를 불러오지 못했습니다.";
+        }
+      }
+      panel.classList.add("open");
+    });
+  });
+}
+
+renderDeptMenu();
+renderItems();
+showStep(0);
+</script>
+</body>
+</html>
