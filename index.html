@@ -1426,7 +1426,7 @@ document.getElementById("org-draft-btn").addEventListener("click", async () => {
 document.getElementById("org-submit-final-btn").addEventListener("click", async () => {
   if (!currentOrg){ showModal("먼저 부서를 선택해 주세요."); return; }
   if (!document.getElementById("org-submitter").value.trim()){ showModal("작성자 이름을 입력해 주세요."); return; }
-  if (!document.getElementById("org-manager").value.trim()){ showModal("팀장/센터장 이름을 입력해 주세요.\n중간관리자가 없는 경우(예. 사업단) 하이픈 기호( - )를 입력해 주세요."); return; }
+  if (!document.getElementById("org-manager").value.trim()){ showModal("팀장/센터장 이름을 입력해 주세요.\n중간관리자 없을 경우(예: 사업단) '-'를 입력해 주세요."); return; }
   if (!document.getElementById("org-head").value.trim()){ showModal("부서장(처장/단장/원장/실장) 이름을 입력해 주세요."); return; }
   if (!orgAllAnswered()){ showModal("모든 항목의 점검 결과를 선택해 주세요."); return; }
   const record = buildOrgRecord(true);
